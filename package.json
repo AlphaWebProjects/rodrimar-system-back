@@ -14,16 +14,14 @@
     "dev": "set NODE_ENV=development && nodemon --watch src/ --exec \"ts-node -r tsconfig-paths/register ./src/server.ts\" -e ts"
   },
   "keywords": [
-    "driven.t",
     "back-end",
     "typescript",
-    "driven",
     "postgres",
     "express",
     "nodejs"
   ],
   "_moduleAliases": {
-    "@": "./dist"
+    "@": "./src"
   },
   "author": "AlphaWeb",
   "license": "ISC",
