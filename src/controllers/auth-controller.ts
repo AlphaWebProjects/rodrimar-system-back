@@ -15,10 +15,10 @@ export async function signUp(req: Request, res: Response){
             return res.sendStatus(httpStatus.BAD_REQUEST)
         }
         
-        const { email, name, password, passwordVerify, role } = req.body
+        const { email, name, password, passwordVerify } = req.body
 
-        await authService.verifyUser({ email, name, password, passwordVerify, role })
-        await authService.createNewUser({ email, name, password, role })
+        await authService.verifyUser({ email, name, password, passwordVerify })
+        await authService.createNewUser({ email, name, password })
 
         return res.sendStatus(httpStatus.CREATED)  
 

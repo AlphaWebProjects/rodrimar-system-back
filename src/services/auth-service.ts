@@ -8,6 +8,10 @@ import { conflictError } from "@/errors/conflict-error";
 import { notFoundError } from "@/errors/not-found-error";
 import { signInBody } from "@/schemas/auth/signInSCHEMA";
 import authRepository from "@/repositories/auth-repository";
+import { forbiddenError } from "@/errors/forbidden-error";
+import { UserRoles } from "@prisma/client";
+
+export type UserRolesType = UserRoles
 
 async function verifyUser(body: signUpBody){
     if (body.password !== body.passwordVerify){
@@ -24,7 +28,6 @@ async function createNewUser(body: Omit<signUpBody, "passwordVerify">){
     const newUser = await authRepository.createUser({
         email: body.email, 
         name:body.name, 
-        role:body.role, 
         password:bcrypt.hashSync(body.password, 10)
     })    
     return newUser
@@ -54,13 +57,27 @@ async function deleteSession(userId: number){
     await authRepository.deleteSession( userId )
     return 
 }
+async function verifyUserRole({userId, expectedRole}: {userId: number, expectedRole: UserRolesType}){
+    const userData = await authRepository.findUserById( userId )
+
+    if (!userData){
+        throw notFoundError("Usuario não encontrado")
+    }
+
+    if (userData.role !== expectedRole){
+        throw forbiddenError("O usuario não tem permissões suficientes")
+    }
+
+    return userData
+}
 
 const authService = {
     verifyUser,
     createNewUser,
     verifyAccees,
     createSession,
-    deleteSession
+    deleteSession,
+    verifyUserRole
 }
 
 export default authService
