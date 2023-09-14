@@ -16,9 +16,18 @@ async function createCategory({name, userId}: {name: string, userId: number}){
         }
     })
 }
+async function getAllCategories(){
+    return prisma.category.findMany({
+        select: {
+            id: true,
+            name: true,
+        }
+    })
+}
 const categoryRepository = {
     findCategoryByName,
-    createCategory
+    createCategory,
+    getAllCategories
 }
 
 export default categoryRepository

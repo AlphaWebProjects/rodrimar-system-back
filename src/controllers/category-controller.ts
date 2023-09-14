@@ -39,3 +39,24 @@ export async function create(req: AuthenticatedRequest, res: Response){
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+export async function getAll(req: AuthenticatedRequest, res: Response){
+    try {        
+
+        const allCategoriesData = await categoryService.getAllCategories()
+
+        return res.send(allCategoriesData).status(httpStatus.CREATED)  
+
+    } catch (error) {
+        console.log(error)
+        if(error.name === "ConflictError") {
+            return res.sendStatus(httpStatus.CONFLICT);
+        }
+        if (error.name === "BadRequestError") {
+            return res.status(httpStatus.BAD_REQUEST).send(error);
+        }
+        if (error.name === "ForbiddenError") {
+            return res.status(httpStatus.FORBIDDEN).send(error);
+        }
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

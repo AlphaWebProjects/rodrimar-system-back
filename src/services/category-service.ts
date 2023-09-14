@@ -18,14 +18,18 @@ async function verifyCategory({name, mustHave}:{name: string, mustHave: boolean}
 
     return hasCategory
 }
-
 async function createCategory({name, userId}: {name: string, userId: number}){
     await categoryRepository.createCategory({name, userId})
+}
+async function getAllCategories(){
+    const result = await categoryRepository.getAllCategories()
+    return result
 }
 
 const categoryService = {
     verifyCategory,
-    createCategory
+    createCategory,
+    getAllCategories
 }
 
 export default categoryService
