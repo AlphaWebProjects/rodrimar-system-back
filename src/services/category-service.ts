@@ -20,6 +20,7 @@ async function verifyCategoryName({name, mustHave}:{name: string, mustHave: bool
 }
 async function upsertCategory({name, userId}: {name: string, userId: number}){
     await categoryRepository.upsertCategory({name, userId})
+    return
 }
 async function getAllCategories(){
     const result = await categoryRepository.getAllCategories()
@@ -34,11 +35,16 @@ async function verifyCategoryId(categoryId: number){
 
     return hasCategory
 }
+async function handleStatus({categoryId, status}: {categoryId: number, status: boolean}){
+    await categoryRepository.handleActivedStatus({ categoryId, status })
+    return 
+}
 const categoryService = {
     verifyCategoryName,
     upsertCategory,
     getAllCategories,
-    verifyCategoryId
+    verifyCategoryId,
+    handleStatus
 }
 
 export default categoryService

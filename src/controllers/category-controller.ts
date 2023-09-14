@@ -95,3 +95,33 @@ export async function update(req: AuthenticatedRequest, res: Response){
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+export async function handleStatus(req: AuthenticatedRequest, res: Response){
+    try {        
+        const { userId } = req
+        const categoryId = Number(req.params.categoryId);
+
+        if (isNaN(categoryId)){
+            return res.sendStatus(httpStatus.BAD_REQUEST)
+        }
+
+        await authService.verifyUserRole({ userId, expectedRole: UserRoles.ADMIN })
+        const { isActived } = await categoryService.verifyCategoryId(Number(categoryId))
+
+        await categoryService.handleStatus({categoryId: Number(categoryId), status: !isActived})
+
+        return res.sendStatus(httpStatus.OK)  
+
+    } catch (error) {
+        console.log(error)
+        if(error.name === "ConflictError") {
+            return res.sendStatus(httpStatus.CONFLICT);
+        }
+        if (error.name === "BadRequestError") {
+            return res.status(httpStatus.BAD_REQUEST).send(error);
+        }
+        if (error.name === "ForbiddenError") {
+            return res.status(httpStatus.FORBIDDEN).send(error);
+        }
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

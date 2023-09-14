@@ -1,4 +1,4 @@
-import { getAll, update } from '@/controllers/category-controller'
+import { getAll, handleStatus, update } from '@/controllers/category-controller'
 import { authenticateToken } from '@/middlewares/authentication-middlerare'
 import { create } from 'domain'
 import { Router } from 'express'
@@ -10,5 +10,5 @@ categoryRouter
     .get("/", getAll) //MODERATOR
     .post("/", create) //MODERATOR
     .put("/", update) //ADMIN
-    .delete("/", )
+    .put("/status/:categoryId", handleStatus) //ADMIN
 export { categoryRouter }

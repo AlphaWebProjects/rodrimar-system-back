@@ -27,6 +27,7 @@ async function getAllCategories(){
         select: {
             id: true,
             name: true,
+            isActived: true
         }
     })
 }
@@ -37,11 +38,22 @@ async function getCategoryById(categoryId: number){
         }
     })
 }
+async function handleActivedStatus({categoryId, status}: {categoryId: number, status: boolean}){
+    return prisma.category.update({
+        where: {
+            id: categoryId
+        },
+        data: {
+            isActived: status
+        }
+    })
+}
 const categoryRepository = {
     findCategoryByName,
     upsertCategory,
     getAllCategories,
-    getCategoryById
+    getCategoryById,
+    handleActivedStatus
 }
 
 export default categoryRepository
