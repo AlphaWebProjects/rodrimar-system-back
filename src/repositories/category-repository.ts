@@ -8,13 +8,19 @@ async function findCategoryByName(name: string){
         }
     })
 }
-async function createCategory({name, userId}: {name: string, userId: number}){
-    return prisma.category.create({
-        data: {
+async function upsertCategory({ name, userId }: { name: string, userId: number }) {
+    return prisma.category.upsert({
+        where: {
+            name: name,
+        },
+        update: {
+            name: name,
+        },
+        create: {
             name: name,
             createdBy: userId
         }
-    })
+    });
 }
 async function getAllCategories(){
     return prisma.category.findMany({
@@ -24,10 +30,18 @@ async function getAllCategories(){
         }
     })
 }
+async function getCategoryById(categoryId: number){
+    return prisma.category.findUnique({
+        where: {
+            id: categoryId
+        }
+    })
+}
 const categoryRepository = {
     findCategoryByName,
-    createCategory,
-    getAllCategories
+    upsertCategory,
+    getAllCategories,
+    getCategoryById
 }
 
 export default categoryRepository

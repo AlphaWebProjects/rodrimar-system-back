@@ -5,7 +5,7 @@ import { notFoundError } from "@/errors/not-found-error";
 
 export type UserRolesType = UserRoles
 
-async function verifyCategory({name, mustHave}:{name: string, mustHave: boolean}){
+async function verifyCategoryName({name, mustHave}:{name: string, mustHave: boolean}){
     const hasCategory = categoryRepository.findCategoryByName(name)
 
     if( hasCategory && !mustHave){
@@ -18,18 +18,27 @@ async function verifyCategory({name, mustHave}:{name: string, mustHave: boolean}
 
     return hasCategory
 }
-async function createCategory({name, userId}: {name: string, userId: number}){
-    await categoryRepository.createCategory({name, userId})
+async function upsertCategory({name, userId}: {name: string, userId: number}){
+    await categoryRepository.upsertCategory({name, userId})
 }
 async function getAllCategories(){
     const result = await categoryRepository.getAllCategories()
     return result
 }
+async function verifyCategoryId(categoryId: number){
+    const hasCategory = await categoryRepository.getCategoryById(categoryId)
 
+    if (!hasCategory){
+        throw notFoundError("Categoria não encontrada")
+    }
+
+    return hasCategory
+}
 const categoryService = {
-    verifyCategory,
-    createCategory,
-    getAllCategories
+    verifyCategoryName,
+    upsertCategory,
+    getAllCategories,
+    verifyCategoryId
 }
 
 export default categoryService
