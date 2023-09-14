@@ -34,6 +34,9 @@ export async function create(req: AuthenticatedRequest, res: Response){
         if (error.name === "BadRequestError") {
             return res.status(httpStatus.BAD_REQUEST).send(error);
         }
+        if(error.name === "NotFoundError") {
+            return res.sendStatus(httpStatus.NOT_FOUND);
+        }
         if (error.name === "ForbiddenError") {
             return res.status(httpStatus.FORBIDDEN).send(error);
         }
@@ -77,7 +80,7 @@ export async function update(req: AuthenticatedRequest, res: Response){
         await categoryService.verifyCategoryName({name: newName, mustHave: false})
         await categoryService.verifyCategoryId(categoryId)
 
-        await categoryService.upsertCategory({name: newName, userId})
+        await categoryService.upsertCategory({name: newName, userId, categoryId})
 
         return res.sendStatus(httpStatus.OK)  
 
@@ -85,6 +88,9 @@ export async function update(req: AuthenticatedRequest, res: Response){
         console.log(error)
         if(error.name === "ConflictError") {
             return res.sendStatus(httpStatus.CONFLICT);
+        }
+        if(error.name === "NotFoundError") {
+            return res.sendStatus(httpStatus.NOT_FOUND);
         }
         if (error.name === "BadRequestError") {
             return res.status(httpStatus.BAD_REQUEST).send(error);
@@ -115,6 +121,9 @@ export async function handleStatus(req: AuthenticatedRequest, res: Response){
         console.log(error)
         if(error.name === "ConflictError") {
             return res.sendStatus(httpStatus.CONFLICT);
+        }
+        if(error.name === "NotFoundError") {
+            return res.sendStatus(httpStatus.NOT_FOUND);
         }
         if (error.name === "BadRequestError") {
             return res.status(httpStatus.BAD_REQUEST).send(error);

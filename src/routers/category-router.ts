@@ -1,6 +1,5 @@
-import { getAll, handleStatus, update } from '@/controllers/category-controller'
+import { getAll, create, handleStatus, update } from '@/controllers/category-controller'
 import { authenticateToken } from '@/middlewares/authentication-middlerare'
-import { create } from 'domain'
 import { Router } from 'express'
 
 const categoryRouter = Router()

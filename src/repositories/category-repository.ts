@@ -8,10 +8,10 @@ async function findCategoryByName(name: string){
         }
     })
 }
-async function upsertCategory({ name, userId }: { name: string, userId: number }) {
+async function upsertCategory({ name, userId, categoryId }: { name: string, userId: number, categoryId?: number }) {
     return prisma.category.upsert({
         where: {
-            name: name,
+            id: categoryId || -1,
         },
         update: {
             name: name,

@@ -6,7 +6,7 @@ import { notFoundError } from "@/errors/not-found-error";
 export type UserRolesType = UserRoles
 
 async function verifyCategoryName({name, mustHave}:{name: string, mustHave: boolean}){
-    const hasCategory = categoryRepository.findCategoryByName(name)
+    const hasCategory = await categoryRepository.findCategoryByName(name)
 
     if( hasCategory && !mustHave){
         throw conflictError("Categoria já cadastrada")
@@ -18,8 +18,8 @@ async function verifyCategoryName({name, mustHave}:{name: string, mustHave: bool
 
     return hasCategory
 }
-async function upsertCategory({name, userId}: {name: string, userId: number}){
-    await categoryRepository.upsertCategory({name, userId})
+async function upsertCategory({ name, userId, categoryId }: { name: string, userId: number, categoryId?: number }) {
+    await categoryRepository.upsertCategory({name, userId, categoryId})
     return
 }
 async function getAllCategories(){

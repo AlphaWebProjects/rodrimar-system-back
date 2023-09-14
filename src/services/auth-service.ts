@@ -64,6 +64,10 @@ async function verifyUserRole({userId, expectedRole}: {userId: number, expectedR
         throw notFoundError("Usuario não encontrado")
     }
 
+    if (userData.role === UserRoles.ADMIN){
+        return userData
+    }
+
     if (userData.role !== expectedRole){
         throw forbiddenError("O usuario não tem permissões suficientes")
     }
