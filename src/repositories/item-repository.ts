@@ -5,12 +5,11 @@ import { itensBody } from "@/schemas/item/itensSCHEMA";
 async function findAllItens(){
     return prisma.item.findMany()
 }
-async function createUser(body: Omit<signUpBody, "passwordVerify">){
-    return prisma.user.create({
-        data: {
-            email: body.email,
-            name: body.name,
-            password: body.password
+
+async function findItemWithName(name:string){
+    return prisma.item.findFirst({
+        where: {
+            name:name
         }
     })
 }
@@ -51,11 +50,11 @@ async function deleteSession(userId: number){
 }
 const itemRepository = {
     findAllItens,
-    createUser,
     createItem,
     createSession,
     findSession,
-    deleteSession
+    deleteSession,
+    findItemWithName
 }
 
 export default itemRepository

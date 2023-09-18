@@ -28,6 +28,10 @@ async function getAllItens(userId: number){
 }
 
 async function postItem(userId: number, item:itensBody) {
+    const hasName = await itemRepository.findItemWithName(item.name)
+    if(hasName){
+        throw conflictError("O nome ja está em uso")
+    }
     const createNewItem = await itemRepository.createItem(item)
 }
 
