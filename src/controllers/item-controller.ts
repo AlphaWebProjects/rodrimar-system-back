@@ -90,3 +90,31 @@ export async function logout(req: AuthenticatedRequest, res: Response) {
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 }
+
+export async function postItens(req: AuthenticatedRequest, res: Response) {
+    try {
+        const item: itensBody = req.body
+        const {userId} = req
+        const {error} = itemSCHEMA.validate(item)
+        if (error) {
+            return res.sendStatus(httpStatus.BAD_REQUEST);
+          }
+
+          const itemPost = await itemService.postItem(userId, item)
+
+          res.send(item)
+
+    } catch (error) {
+        console.log(error)
+        if(error.name === "ConflictError") {
+            return res.sendStatus(httpStatus.CONFLICT);
+        }
+        if (error.name === "BadRequestError") {
+            return res.status(httpStatus.BAD_REQUEST).send(error);
+        }
+        if (error.name === "ForbiddenError") {
+            return res.status(httpStatus.FORBIDDEN).send(error);
+        }
+        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

@@ -13,7 +13,6 @@ async function createUser(body: Omit<signUpBody, "passwordVerify">){
         data: {
             email: body.email,
             name: body.name,
-            role: body.role,
             password: body.password
         }
     })
@@ -40,12 +39,20 @@ async function deleteSession(userId: number){
         }
     })
 }
+async function findUserById(userId: number){
+    return prisma.user.findUnique({
+        where: {
+            id: userId
+        }
+    })
+}
 const authRepository = {
     findUserWithEmail,
     createUser,
     createSession,
     findSession,
-    deleteSession
+    deleteSession,
+    findUserById
 }
 
 export default authRepository

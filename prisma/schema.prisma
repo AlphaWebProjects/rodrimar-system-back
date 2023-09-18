@@ -16,16 +16,47 @@ model session {
 
   user        user?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+enum UserRoles {
+  ADMIN
+  MODERATOR
+  VISIT
+}
 model user {
   id            Int         @id @default(autoincrement())
   name          String
-  role          String
+  role          UserRoles   @default(VISIT)
   email         String      @unique
   password      String
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
   session                   session[]
+  category                  category[]
+  subCategory               subCategory[]
+}
+model category {
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  createdBy     Int  
+  isActived     Boolean         @default(true)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  user          user?           @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subCategory   subCategory[]
+
+}
+model subCategory {
+  id            Int         @id @default(autoincrement())
+  name          String
+  categoryId    Int
+  createdBy     Int  
+  isActived     Boolean     @default(true)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  user          user?       @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  category      category?   @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 
@@ -39,6 +70,17 @@ model item {
   subCategoryId Int   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-
+  insertedItens insertedItens[]
 }
 
+model insertedItens {
+  id               Int       @id @default(autoincrement())
+  itemId           Int       @map(name: "itemId")
+  price            String
+  insertedQuantity Float
+  stock            Int
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  item             item?      @relation(fields: [itemId], references: [id])
+}

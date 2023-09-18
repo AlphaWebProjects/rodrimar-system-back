@@ -10,11 +10,23 @@ async function createUser(body: Omit<signUpBody, "passwordVerify">){
         data: {
             email: body.email,
             name: body.name,
-            role: body.role,
             password: body.password
         }
     })
 }
+
+async function createItem(item:itensBody) {
+    return prisma.item.create({
+        data: {
+            name: item.name,
+            description: item.description,
+            lastPrice: item.lastPrice,
+            subCategoryId: item.subCategoryId,
+            imageId: item.imageId, 
+          }
+    })
+}
+
 async function createSession({userId, token}: {userId: number, token: string}){
     return prisma.session.create({
         data: {
@@ -40,6 +52,7 @@ async function deleteSession(userId: number){
 const itemRepository = {
     findAllItens,
     createUser,
+    createItem,
     createSession,
     findSession,
     deleteSession

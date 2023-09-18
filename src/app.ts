@@ -6,6 +6,7 @@ import "reflect-metadata";
 import "express-async-errors";
 import { authRouter } from "./routers/auth-router";
 import { itemRouter } from "./routers/item-router";
+import { categoryRouter } from "./routers/category-router";
 
 loadEnv();
 
@@ -16,6 +17,7 @@ app
   .use(express.json())
   .use("/auth", authRouter)
   .use("/itens", itemRouter)
+  .use("/category", categoryRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
 export function init(): Promise<Express> {

@@ -27,15 +27,10 @@ async function getAllItens(userId: number){
     return allItens
 }
 
-async function createNewUser(body: Omit<signUpBody, "passwordVerify">){
-    const newUser = await authRepository.createUser({
-        email: body.email, 
-        name:body.name, 
-        role:body.role, 
-        password:bcrypt.hashSync(body.password, 10)
-    })    
-    return newUser
+async function postItem(userId: number, item:itensBody) {
+    const createNewItem = await itemRepository.createItem(item)
 }
+
 async function verifyAccees(body: signInBody){
     const hasUser = await authRepository.findUserWithEmail(body.email)
 
@@ -64,8 +59,8 @@ async function deleteSession(userId: number){
 
 const itemService = {
     getAllItens,
+    postItem,
     verifyUser,
-    createNewUser,
     verifyAccees,
     createSession,
     deleteSession
