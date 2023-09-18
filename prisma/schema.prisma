@@ -58,3 +58,29 @@ model subCategory {
   user          user?       @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category      category?   @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
+
+
+model item {
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String
+  lastPrice     Float
+  imageId       Int
+  subCategoryId Int   
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  insertedItens insertedItens[]
+}
+
+model insertedItens {
+  id               Int       @id @default(autoincrement())
+  itemId           Int       @map(name: "itemId")
+  price            String
+  insertedQuantity Float
+  stock            Int
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  item             item?      @relation(fields: [itemId], references: [id])
+}

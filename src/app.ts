@@ -5,6 +5,7 @@ import express, { Express } from "express";
 import "reflect-metadata";
 import "express-async-errors";
 import { authRouter } from "./routers/auth-router";
+import { itemRouter } from "./routers/item-router";
 import { categoryRouter } from "./routers/category-router";
 
 loadEnv();
@@ -15,6 +16,7 @@ app
   .use(cors())
   .use(express.json())
   .use("/auth", authRouter)
+  .use("/itens", itemRouter)
   .use("/category", categoryRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
