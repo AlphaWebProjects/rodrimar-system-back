@@ -27,3 +27,18 @@ model user {
 
   session                   session[]
 }
+
+
+
+model item {
+  id            Int       @id @default(autoincrement())
+  name          String
+  description   String
+  lastPrice     Float
+  imageId       Int
+  subCategoryId Int   
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+}
+

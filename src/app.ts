@@ -5,6 +5,7 @@ import express, { Express } from "express";
 import "reflect-metadata";
 import "express-async-errors";
 import { authRouter } from "./routers/auth-router";
+import { itemRouter } from "./routers/item-router";
 
 loadEnv();
 
@@ -14,6 +15,7 @@ app
   .use(cors())
   .use(express.json())
   .use("/auth", authRouter)
+  .use("/itens", itemRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
 export function init(): Promise<Express> {
