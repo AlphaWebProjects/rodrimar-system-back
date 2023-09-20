@@ -12,8 +12,8 @@ import { UserRoles } from "@prisma/client";
 export async function getItens(req: AuthenticatedRequest, res: Response){
     const userId = Number(req.query.userId);
     try {
-        const itens = await itemService.getAllItens(Number(userId))
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.VISIT })
+        const itens = await itemService.getAllItens(Number(userId))
         return res.send(itens)
 
     } catch (error) {
@@ -60,3 +60,4 @@ export async function postItens(req: AuthenticatedRequest, res: Response) {
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+

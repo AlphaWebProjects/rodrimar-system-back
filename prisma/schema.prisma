@@ -76,7 +76,7 @@ model item {
 model insertedItens {
   id               Int       @id @default(autoincrement())
   itemId           Int       @map(name: "itemId")
-  price            String
+  price            Float
   insertedQuantity Float
   stock            Int
   createdAt        DateTime  @default(now())
