@@ -7,6 +7,7 @@ import "express-async-errors";
 import { authRouter } from "./routers/auth-router";
 import { itemRouter } from "./routers/item-router";
 import { categoryRouter } from "./routers/category-router";
+import { insertItemRouter } from "./routers/insertItem-router";
 
 loadEnv();
 
@@ -17,6 +18,7 @@ app
   .use(express.json())
   .use("/auth", authRouter)
   .use("/itens", itemRouter)
+  .use("/insertItem", insertItemRouter)
   .use("/category", categoryRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
