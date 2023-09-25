@@ -9,5 +9,6 @@ itemRouter
     .post("/", postItens)
     .get("/", getItens)
     .all("/*", authenticateToken)
+    .put("/enable")
     .delete("/delete", logout)
 export { itemRouter }

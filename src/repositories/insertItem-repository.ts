@@ -1,20 +1,20 @@
 import { prisma } from "@/config";
 import { signUpBody } from "@/schemas/auth/signupSCHEMA";
 import { insertedItemBody } from "@/schemas/insertedItem/InsItemSCHEMA";
+import { updateInsertedItemBody } from "@/schemas/insertedItem/updateInsItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllInsertedItens(){
     return prisma.insertedItens.findMany()
 }
 
-async function findItemWithName(name:string){
-    return prisma.item.findFirst({
+async function findByItemId(itemId:number) {
+    return prisma.insertedItens.findMany({
         where: {
-            name:name
+            itemId:itemId
         }
     })
 }
-
 async function insertItem(insertedItem: insertedItemBody) {
     const existingItem = await prisma.insertedItens.findFirst({
         where: {
@@ -38,8 +38,15 @@ async function insertItem(insertedItem: insertedItemBody) {
     });
 }
 
-async function updateStock(id:number) {
-    
+async function updateStock(upInsertItem:updateInsertedItemBody) {
+
+    const {id, ...upInsertItemData} = upInsertItem
+    return prisma.insertedItens.update({
+        where:{
+            id:Number(id)
+        },
+        data: upInsertItemData
+    })
 }
 
 
@@ -61,9 +68,9 @@ async function createItem(item:itensBody) {
 const insertedItemRepository = {
     findAllInsertedItens,
     createItem,
-    findItemWithName,
     insertItem,
-    updateStock
+    updateStock,
+    findByItemId
 }
 
 export default insertedItemRepository

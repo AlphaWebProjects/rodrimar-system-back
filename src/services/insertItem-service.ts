@@ -12,6 +12,7 @@ import itemRepository from "@/repositories/item-repository";
 import insertedItemRepository from '@/repositories/insertItem-repository';
 import { insertedItemBody } from '@/schemas/insertedItem/InsItemSCHEMA';
 import httpStatus from 'http-status';
+import { updateInsertedItemBody } from '@/schemas/insertedItem/updateInsItemSCHEMA';
 
 async function getAllInsertedItens(){
     const allItens = await insertedItemRepository.findAllInsertedItens()
@@ -26,17 +27,21 @@ async function inserItem(userId:number, inserItem: insertedItemBody) {
     return
 }
 
-async function updateStockService(id:number) {
-    await insertedItemRepository.updateStock(id)
+async function updateStockService(upInsertItem:updateInsertedItemBody) {
+    await insertedItemRepository.updateStock(upInsertItem)
 
     return
 }
 
-
+async function getInsertedItensByItemId(itemId:number) {
+    return insertedItemRepository.findByItemId(itemId)
+}
 
 const insertedItemService = {
     getAllInsertedItens,
-    inserItem
+    inserItem,
+    getInsertedItensByItemId,
+    updateStockService
 }
 
 export default insertedItemService

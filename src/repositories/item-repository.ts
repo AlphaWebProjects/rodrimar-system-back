@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { signUpBody } from "@/schemas/auth/signupSCHEMA";
+import { enableBody } from "@/schemas/item/enableItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllItens(){
@@ -48,13 +49,30 @@ async function deleteSession(userId: number){
         }
     })
 }
+
+async function updateStatus(Itemenable:enableBody) {
+    const { itemId, enable } = Itemenable;
+
+    const updatedItem = await prisma.item.update({
+        where: {
+            id: itemId,
+        },
+        data: {
+            enable: enable,
+        },
+    });
+
+    return updatedItem;
+}
+
 const itemRepository = {
     findAllItens,
     createItem,
     createSession,
     findSession,
     deleteSession,
-    findItemWithName
+    findItemWithName,
+    updateStatus
 }
 
 export default itemRepository
