@@ -5,7 +5,6 @@ import { signInSCHEMA } from "@/schemas/auth/signInSCHEMA";
 import authService from "@/services/auth-service";
 import { AuthenticatedRequest } from "@/middlewares/authentication-middlerare";
 
-
 export async function signUp(req: Request, res: Response){
     try {
         const isValid = signupSCHEMA.validate(req.body, {abortEarly: false})

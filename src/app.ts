@@ -8,6 +8,7 @@ import { authRouter } from "./routers/auth-router";
 import { itemRouter } from "./routers/item-router";
 import { categoryRouter } from "./routers/category-router";
 import { insertItemRouter } from "./routers/insertItem-router";
+import { subCategoryRouter } from "./routers/sub-category-router";
 
 loadEnv();
 
@@ -20,6 +21,7 @@ app
   .use("/itens", itemRouter)
   .use("/insertItem", insertItemRouter)
   .use("/category", categoryRouter)
+  .use("/subcategory", subCategoryRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
 export function init(): Promise<Express> {

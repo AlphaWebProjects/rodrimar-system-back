@@ -24,7 +24,48 @@ async function upsertCategory({ name, userId, categoryId }: { name: string, user
 }
 async function getAllCategories(){
     const result = await categoryRepository.getAllCategories()
-    return result
+    const formatedResult = result.map(e => ({
+        categoryId: e.id,
+        categoryName: e.name,
+        isActived: e.isActived,
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
+    }));
+    return formatedResult
+}
+async function getAllCategoriesData(){
+    const result = await categoryRepository.getAllCategoriesData()
+    const formatedResult = result.map(e => ({
+        categoryId: e.id,
+        categoryName: e.name,
+        isActived: e.isActived,
+        createdBy: {
+            userId: e.user.id,
+            userName: e.user.name,
+            userEmail: e.user.email,
+            userRole: e.user.role,
+            createdAt: e.user.createdAt,
+            updatedAt: e.user.updatedAt,
+        },
+        allSubCategoriesData: e.subCategory.map(e => ({
+            subCategoryId: e.id,
+            subCategoryName: e.name,
+            isActived: e.isActived,
+            createdBy: {
+                userId: e.user.id,
+                userName: e.user.name,
+                userEmail: e.user.email,
+                userRole: e.user.role,
+                createdAt: e.user.createdAt,
+                updatedAt: e.user.updatedAt,
+            },
+            createdAt: e.createdAt,
+            updatedAt: e.updatedAt,
+        })),
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
+    }));
+    return formatedResult
 }
 async function verifyCategoryId(categoryId: number){
     const hasCategory = await categoryRepository.getCategoryById(categoryId)
@@ -43,6 +84,7 @@ const categoryService = {
     verifyCategoryName,
     upsertCategory,
     getAllCategories,
+    getAllCategoriesData,
     verifyCategoryId,
     handleStatus
 }

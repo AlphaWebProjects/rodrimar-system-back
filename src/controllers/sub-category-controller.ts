@@ -4,25 +4,29 @@ import authService from "@/services/auth-service";
 import { AuthenticatedRequest } from "@/middlewares/authentication-middlerare";
 import { createCategorySCHEMA } from "@/schemas/category/createCategory";
 import { UserRoles } from "@prisma/client";
-import categoryService from "@/services/category-service";
 import { updateCategorySCHEMA } from "@/schemas/category/updateCategory";
+import { createSubCategorySCHEMA } from "@/schemas/sub-category/createSubCategory";
+import { updateSubCategorySCHEMA } from "@/schemas/sub-category/updateSubCategory";
+import subCategoryService from "@/services/sub-category-service";
+import categoryService from "@/services/category-service";
 
 export async function create(req: AuthenticatedRequest, res: Response){
     try {
-        const isValid = createCategorySCHEMA.validate(req.body, {abortEarly: false})
+        const isValid = createSubCategorySCHEMA.validate(req.body, {abortEarly: false})
 
         if(isValid.error){
             console.log(isValid.error)
             return res.sendStatus(httpStatus.BAD_REQUEST)
         }
         
-        const { name } = req.body
+        const { name, categoryId } = req.body
         const { userId } = req
 
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
-        await categoryService.verifyCategoryName({name, mustHave: false})
+        await subCategoryService.verifySubCategoryName({name, mustHave: false})
+        await categoryService.verifyCategoryId(categoryId)
 
-        await categoryService.upsertCategory({name, userId})
+        await subCategoryService.upsertSubCategory({name, userId, categoryId})
 
         return res.sendStatus(httpStatus.CREATED)  
 
@@ -45,29 +49,10 @@ export async function create(req: AuthenticatedRequest, res: Response){
 }
 export async function getAll(req: AuthenticatedRequest, res: Response){
     try {        
-        const allCategoriesData = await categoryService.getAllCategories()
 
-        return res.send(allCategoriesData).status(httpStatus.OK)  
+        const allSubCategoriesData = await subCategoryService.getAllSubCategories()
 
-    } catch (error) {
-        console.log(error)
-        if(error.name === "ConflictError") {
-            return res.sendStatus(httpStatus.CONFLICT);
-        }
-        if (error.name === "BadRequestError") {
-            return res.status(httpStatus.BAD_REQUEST).send(error);
-        }
-        if (error.name === "ForbiddenError") {
-            return res.status(httpStatus.FORBIDDEN).send(error);
-        }
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
-export async function getAllCategoriesData(req: AuthenticatedRequest, res: Response){
-    try {        
-        const allCategoriesData = await categoryService.getAllCategoriesData()
-
-        return res.send(allCategoriesData).status(httpStatus.OK)  
+        return res.send(allSubCategoriesData).status(httpStatus.OK)  
 
     } catch (error) {
         console.log(error)
@@ -85,21 +70,22 @@ export async function getAllCategoriesData(req: AuthenticatedRequest, res: Respo
 }
 export async function update(req: AuthenticatedRequest, res: Response){
     try {
-        const isValid = updateCategorySCHEMA.validate(req.body, {abortEarly: false})
+        const isValid = updateSubCategorySCHEMA.validate(req.body, {abortEarly: false})
 
         if(isValid.error){
             console.log(isValid.error)
             return res.sendStatus(httpStatus.BAD_REQUEST)
         }
         
-        const { newName, categoryId } = req.body
+        const { newName, categoryId, subCategoryId } = req.body
         const { userId } = req
 
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.ADMIN })
-        await categoryService.verifyCategoryName({name: newName, mustHave: false})
+        await subCategoryService.verifySubCategoryName({name: newName, mustHave: false})
+        await subCategoryService.verifySubCategoryId(subCategoryId)
         await categoryService.verifyCategoryId(categoryId)
 
-        await categoryService.upsertCategory({name: newName, userId, categoryId})
+        await subCategoryService.upsertSubCategory({name: newName, userId, categoryId, subCategoryId})
 
         return res.sendStatus(httpStatus.OK)  
 
@@ -123,16 +109,16 @@ export async function update(req: AuthenticatedRequest, res: Response){
 export async function handleStatus(req: AuthenticatedRequest, res: Response){
     try {        
         const { userId } = req
-        const categoryId = Number(req.params.categoryId);
+        const subCategoryId = Number(req.params.subCategoryId);
 
-        if (isNaN(categoryId)){
+        if (isNaN(subCategoryId)){
             return res.sendStatus(httpStatus.BAD_REQUEST)
         }
 
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.ADMIN })
-        const { isActived } = await categoryService.verifyCategoryId(Number(categoryId))
+        const { isActived } = await subCategoryService.verifySubCategoryId(subCategoryId)
 
-        await categoryService.handleStatus({categoryId: Number(categoryId), status: !isActived})
+        await subCategoryService.handleStatus({subCategoryId: subCategoryId, status: !isActived})
 
         return res.sendStatus(httpStatus.OK)  
 
