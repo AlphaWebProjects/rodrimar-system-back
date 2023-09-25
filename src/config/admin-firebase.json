@@ -1,0 +1,14 @@
+{
+    "type": "service_account",
+    "project_id": "rodrimar-images",
+    "private_key_id": "048b403b9d49bcd4ad46619e2d6e66e9921d9568",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDhebOkWZ9dxhhj\nT553iFjcfbXGic8eNP8NDfMK1e89GoVv532NmY7bXRyHt7/F7qWCO92mo1xTYxAW\n/vNXGSO6fIJrENTW77SUSoqhkKhHvG/IeTCrsFNye7MdR3Jp4pUwzPJa7/MQhAku\nDC385X4TtN5xynrY7bW/DkaokpaaO+KFis9eYp1GEeRjzXI4lhPC6PfmR/xmiA4A\nWB/jQJXZvw7O5ICvmp03p7lHSswOo9oGlF0ssYrh7EoJfLLViMV3vRbd0V5L9Wnx\ny2T9jgTcOnVlTkmg9YMDRPoWQSutA37wbBfbCsmv5tyEfq5DYOeO31/ojADYv1CV\nnagv1//NAgMBAAECggEALSXcH3jVpSaFHB+ldLxfxLjERO6zwxHsDy5fn+gSCTtu\nBCgHdyrMFOcqTw+vTgAY8oCvw4367vSLVHt0+Nf/FDiZubwLTkV9tGLPqwXG+GRG\nQs9nfD1onCgiR6bWhVa6NmUXUzewRTqXBvon3DeMvP/uubzIR/cjORAv/FGr59Jd\nNCP0nStnAVPXhT9snNMUkfNRkb5feCel8yCjZ43wdkr8I9tThCBsgzQHPkhB0yVN\nNUHaUeGkd6BAbNIIADd3335Py/DDqSWRm98+Hy+UAraaV3w7/2oLqplhrMVm86vL\nKdssGO4Fzxgb8vYoEIXARnXOPz3qC7pGCGfipXzHCQKBgQDxZT0fbxh97Caj0CcM\nmG+uN8o+BcqmX7pumabrIyfxl3BISKjSVVvEw/yHFJrXgTQrpQysOjYN2X/wXI9q\nVO56sUiob8fjiPz5pDM4xVNXR2AT6ls057k0BpO3ph8PdLA4aQdh8F3WzPvbx++U\nuVcSzmsQj+ABvtAw3DCRH0PG+QKBgQDvHeQfuTZ28qpgSlHxuRtaLKs32+qDjZZZ\nalGqG31qUf5GztBOWWNn5vc5n+EKXAyMeEj52+rHvSReiBdwV8NZm2RWHijvM80F\n9fAJkJyV3RlfEv1GNnZPN+YJydM8D4nvgVMf/XMlf3ZeMZJIsRKl1eWko8ehBUxL\nYAWm+AKQdQKBgFsbibE2ffjwyziilEplsij/933nM7ANi1C4/03Z6/Z74K33dnhE\nLSmbitD0zugtZKJgXeMW6VXa1DXEyYApZAS8qp6f6cKP7mLOPWLc3vKfBr0dg6T5\nHGZtYQ08TpbHxMbVpSqqzNAId7pgwKTSOvHnJHOQycv+15bJVC9BrJQJAoGBAOiY\nxP1u5uIR71W3NbrS+x5ecTbm/1p0choMZ9/22aqAk75BEzQDk8TQURCGyxuOqs5B\ne4tBN0KQZD5oV5R6apZRp+p1cBAu7XKs55AGUasd5b4r9J9F/xPUJjrDTm0QGHcX\n78oges+xC21Y/xki1ibmyHm8r0Wcp7hycU0X1za5AoGAVw/3jbgPPf7U3xAbN855\no7WJtasJ2cowJWjYkwRlV09uTKK9QtaheVmEQJyreVLDs4ODQtG6xFSFjc12KtDx\nuB+gTcGiWA0n7Ka2UtBpYaSI5ihl/RCD9Jvt/0KZT7RueJgWFgtLszDnvKZH68LX\ndyycfojtO2K6xQNz+1KXi5o=\n-----END PRIVATE KEY-----\n",
+    "client_email": "firebase-adminsdk-wiqwi@rodrimar-images.iam.gserviceaccount.com",
+    "client_id": "107621163466950331995",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-wiqwi%40rodrimar-images.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
+  
