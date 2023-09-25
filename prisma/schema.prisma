@@ -58,9 +58,6 @@ model subCategory {
   user          user?       @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category      category?   @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
-
-
-
 model item {
   id            Int       @id @default(autoincrement())
   name          String
@@ -70,6 +67,8 @@ model item {
   subCategoryId Int   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  
+  image          image?      @relation(fields: [imageId], references: [id])
   insertedItens insertedItens[]
 }
 
@@ -83,4 +82,13 @@ model insertedItens {
   updatedAt        DateTime  @updatedAt
 
   item             item?      @relation(fields: [itemId], references: [id])
+}
+model image {
+  id                  Int         @id @default(autoincrement())
+  imageUrl            String
+  imageName           String
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  item                item[]
 }
