@@ -70,6 +70,7 @@ model item {
   
   image          image?      @relation(fields: [imageId], references: [id])
   insertedItens insertedItens[]
+  enable        Boolean   @default(true)
 }
 
 model insertedItens {
@@ -80,9 +81,11 @@ model insertedItens {
   stock            Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  enable           Boolean   @default(true)
 
   item             item?      @relation(fields: [itemId], references: [id])
 }
+
 model image {
   id                  Int         @id @default(autoincrement())
   imageUrl            String

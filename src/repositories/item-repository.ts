@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { signUpBody } from "@/schemas/auth/signupSCHEMA";
+import { enableBody } from "@/schemas/item/enableItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllItens(){
@@ -26,35 +27,39 @@ async function createItem(item:itensBody) {
     })
 }
 
-async function createSession({userId, token}: {userId: number, token: string}){
-    return prisma.session.create({
+
+
+async function updateStatus(Itemenable) {
+    const { itemId, enable } = Itemenable;
+
+    const updatedItem = await prisma.item.update({
+        where: {
+            id: itemId,
+        },
         data: {
-            userId: userId,
-            token: token
-        }
-    })
-}
-async function findSession(token: string){
-    return prisma.session.findFirst({
+            enable: enable,
+        },
+    });
+
+    await prisma.insertedItens.updateMany({
         where: {
-            token: token
-        }
-    })
+            itemId: itemId,
+        },
+        data: {
+            enable: enable,
+        },
+    });
+
+    return updatedItem;
 }
-async function deleteSession(userId: number){
-    return prisma.session.deleteMany({
-        where: {
-            userId: userId
-        }
-    })
-}
+
+
+
 const itemRepository = {
     findAllItens,
     createItem,
-    createSession,
-    findSession,
-    deleteSession,
-    findItemWithName
+    findItemWithName,
+    updateStatus
 }
 
 export default itemRepository

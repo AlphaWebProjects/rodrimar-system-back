@@ -7,6 +7,7 @@ import bucket from "@/config/firebaseconfig";
 export async function uploadImage(req: AuthenticatedRequestWithPublicURL, res: Response, next: NextFunction) {
           
     if (!req.file) {
+        console.log("caiu")
         return res.sendStatus(httpStatus.BAD_REQUEST);
     }
 

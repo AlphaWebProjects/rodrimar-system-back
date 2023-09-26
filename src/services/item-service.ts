@@ -9,6 +9,7 @@ import { notFoundError } from "@/errors/not-found-error";
 import { signInBody } from "@/schemas/auth/signInSCHEMA";
 import authRepository from "@/repositories/auth-repository";
 import itemRepository from "@/repositories/item-repository";
+import { enableBody } from '@/schemas/item/enableItemSCHEMA';
 
 async function verifyUser(body: signUpBody){
     if (body.password !== body.passwordVerify){
@@ -35,39 +36,18 @@ async function postItem(userId: number, item:itensBody) {
     const createNewItem = await itemRepository.createItem(item)
 }
 
-async function verifyAccees(body: signInBody){
-    const hasUser = await authRepository.findUserWithEmail(body.email)
 
-    if(!hasUser){
-        throw badRequestError("Email não encontrado")
-    }  
-        
-    const isValidPassword = bcrypt.compareSync(body.password, hasUser.password)
 
-    if(!isValidPassword){
-        throw unauthorizedError("Senha invalida")
-    }
-    return { userId: hasUser.id, email: hasUser.email, name: hasUser.name }
+async function updateItemStatus(enable:enableBody) {
+    return await itemRepository.updateStatus(enable)
 }
-async function createSession(userId: number){
-    const token = jwt.sign({ userId }, process.env.JWT_SECRET)
 
-    const session = await authRepository.createSession({userId, token})
-    
-    return session.token
-}
-async function deleteSession(userId: number){
-    await authRepository.deleteSession( userId )
-    return 
-}
 
 const itemService = {
     getAllItens,
     postItem,
     verifyUser,
-    verifyAccees,
-    createSession,
-    deleteSession
+    updateItemStatus
 }
 
 export default itemService
