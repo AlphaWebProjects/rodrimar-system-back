@@ -38,16 +38,23 @@ async function insertItem(insertedItem: insertedItemBody) {
     });
 }
 
-async function updateStock(upInsertItem:updateInsertedItemBody) {
+async function updateStock(upInsertItem: updateInsertedItemBody) {
+    const { id, ...upInsertItemData } = upInsertItem;
 
-    const {id, ...upInsertItemData} = upInsertItem
+    // Adicione o campo updatedAt com a data e hora atual
+    const dataToUpdate = {
+        ...upInsertItemData,
+        updatedAt: new Date(),
+    };
+
     return prisma.insertedItens.update({
-        where:{
-            id:Number(id)
+        where: {
+            id: Number(id),
         },
-        data: upInsertItemData
-    })
+        data: dataToUpdate,
+    });
 }
+
 
 
 

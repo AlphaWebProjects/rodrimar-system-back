@@ -6,6 +6,7 @@ export type updateInsertedItemBody = {
     price?: number,
     insertedQuantity?:number,
     stock?:number
+    enable?:boolean
 }
 
 const updateInsItemSCHEMA = joi.object<updateInsertedItemBody>({
@@ -13,7 +14,8 @@ const updateInsItemSCHEMA = joi.object<updateInsertedItemBody>({
     itemId: joi.number(),
     price:   joi.number(),
     insertedQuantity:  joi.number(),
-    stock:joi.number()
+    stock:joi.number(),
+    enable:joi.boolean()
 })
 
 export {updateInsItemSCHEMA}

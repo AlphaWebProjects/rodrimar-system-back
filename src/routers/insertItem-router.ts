@@ -5,9 +5,9 @@ import { Router } from 'express'
 const insertItemRouter = Router()
 
 insertItemRouter
+.all("/*", authenticateToken)
     .get("/",getInsertedItens)
     .get("/itemId",getByItemId)
     .post("/", postInsertedItem)
     .put("/", putInsertedItem)
-    .all("/*", authenticateToken)
 export { insertItemRouter }

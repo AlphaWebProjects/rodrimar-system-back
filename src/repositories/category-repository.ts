@@ -23,11 +23,17 @@ async function upsertCategory({ name, userId, categoryId }: { name: string, user
     });
 }
 async function getAllCategories(){
+    return prisma.category.findMany({})
+}
+async function getAllCategoriesData(){
     return prisma.category.findMany({
-        select: {
-            id: true,
-            name: true,
-            isActived: true
+        include: {
+            subCategory: {
+                include: {
+                    user: true
+                }
+            },
+            user: true
         }
     })
 }
@@ -52,6 +58,7 @@ const categoryRepository = {
     findCategoryByName,
     upsertCategory,
     getAllCategories,
+    getAllCategoriesData,
     getCategoryById,
     handleActivedStatus
 }

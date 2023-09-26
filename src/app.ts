@@ -8,6 +8,8 @@ import { authRouter } from "./routers/auth-router";
 import { itemRouter } from "./routers/item-router";
 import { categoryRouter } from "./routers/category-router";
 import { insertItemRouter } from "./routers/insertItem-router";
+import { subCategoryRouter } from "./routers/sub-category-router";
+import { imageRouter } from "./routers/image-router";
 
 loadEnv();
 
@@ -17,9 +19,11 @@ app
   .use(cors())
   .use(express.json())
   .use("/auth", authRouter)
+  .use("/image", imageRouter)
   .use("/itens", itemRouter)
   .use("/insertItem", insertItemRouter)
   .use("/category", categoryRouter)
+  .use("/subcategory", subCategoryRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
 export function init(): Promise<Express> {

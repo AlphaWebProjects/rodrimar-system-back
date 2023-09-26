@@ -6,7 +6,7 @@ import authService from "@/services/auth-service";
 import { AuthenticatedRequest } from "@/middlewares/authentication-middlerare";
 import itemService from "@/services/item-service";
 import { UserRoles } from "@prisma/client";
-import { enableBody } from "@/schemas/item/enableItemSCHEMA";
+import { enableBody, enableSCHEMA } from "@/schemas/item/enableItemSCHEMA";
 
 
 
@@ -67,10 +67,11 @@ export async function updateEnableStatus(req: AuthenticatedRequest, res: Respons
         const enable:enableBody = req.body
         const userId = Number(req.query.userId);
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
-        const {error} = itemSCHEMA.validate(enable, {abortEarly: false})
+        const {error} = enableSCHEMA.validate(enable, {abortEarly: false})
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
 
         if (error) {
+            console.log('caiu aqui')
             return res.sendStatus(httpStatus.BAD_REQUEST);
           }
           const enableItem = await itemService.updateItemStatus(enable)

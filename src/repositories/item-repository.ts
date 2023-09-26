@@ -27,30 +27,9 @@ async function createItem(item:itensBody) {
     })
 }
 
-async function createSession({userId, token}: {userId: number, token: string}){
-    return prisma.session.create({
-        data: {
-            userId: userId,
-            token: token
-        }
-    })
-}
-async function findSession(token: string){
-    return prisma.session.findFirst({
-        where: {
-            token: token
-        }
-    })
-}
-async function deleteSession(userId: number){
-    return prisma.session.deleteMany({
-        where: {
-            userId: userId
-        }
-    })
-}
 
-async function updateStatus(Itemenable:enableBody) {
+
+async function updateStatus(Itemenable) {
     const { itemId, enable } = Itemenable;
 
     const updatedItem = await prisma.item.update({
@@ -62,15 +41,23 @@ async function updateStatus(Itemenable:enableBody) {
         },
     });
 
+    await prisma.insertedItens.updateMany({
+        where: {
+            itemId: itemId,
+        },
+        data: {
+            enable: enable,
+        },
+    });
+
     return updatedItem;
 }
+
+
 
 const itemRepository = {
     findAllItens,
     createItem,
-    createSession,
-    findSession,
-    deleteSession,
     findItemWithName,
     updateStatus
 }
