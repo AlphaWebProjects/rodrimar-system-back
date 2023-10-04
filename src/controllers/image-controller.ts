@@ -29,9 +29,9 @@ export async function createImage(req: AuthenticatedRequestWithPublicURL, res: R
             name = format((new Date()), 'dd/MM/yyyy')
         }
         
-        await imageService.createImageRef({ imageURL, name })
+        const imageData = await imageService.createImageRef({ imageURL, name })
 
-        return res.sendStatus(httpStatus.CREATED)
+        return res.status(httpStatus.CREATED).send({imageId: imageData.id})
 
 
     } catch (error) {

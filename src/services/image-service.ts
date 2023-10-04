@@ -5,8 +5,8 @@ async function getAllImagesData(){
     return result
 }
 async function createImageRef( {imageURL, name}: {imageURL: string, name: string} ){
-    await imageRepository.createImageRef({ imageURL, name })
-    return 
+    const imageData = await imageRepository.createImageRef({ imageURL, name })
+    return imageData
 }
 const imageService = {
     getAllImagesData,
