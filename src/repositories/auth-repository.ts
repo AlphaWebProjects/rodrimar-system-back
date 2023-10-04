@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { signUpBody } from "@/schemas/auth/signupSCHEMA";
+import { UserRolesType } from "@/services/auth-service";
 
 async function findUserWithEmail(email: string){
     return prisma.user.findFirst({
@@ -46,13 +47,24 @@ async function findUserById(userId: number){
         }
     })
 }
+async function changeUserRole({userId, role}:{userId: number, role: UserRolesType}){
+    return prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            role: role
+        }
+    })
+}
 const authRepository = {
     findUserWithEmail,
     createUser,
     createSession,
     findSession,
     deleteSession,
-    findUserById
+    findUserById,
+    changeUserRole
 }
 
 export default authRepository
