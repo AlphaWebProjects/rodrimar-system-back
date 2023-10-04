@@ -74,6 +74,19 @@ async function verifyUserRole({userId, expectedRole}: {userId: number, expectedR
 
     return userData
 }
+async function verifyUserExist(userId: number){
+    const hasUser = await authRepository.findUserById(userId)
+
+    if(!hasUser){
+        throw badRequestError("Usuario não encontrado")
+    }  
+
+    return hasUser
+}
+async function changeUserRole({userId, role}:{userId: number, role: UserRolesType}){
+    const result = await authRepository.changeUserRole({userId, role})
+    return result
+}
 
 const authService = {
     verifyUser,
@@ -81,7 +94,9 @@ const authService = {
     verifyAccees,
     createSession,
     deleteSession,
-    verifyUserRole
+    verifyUserRole,
+    verifyUserExist,
+    changeUserRole
 }
 
 export default authService
