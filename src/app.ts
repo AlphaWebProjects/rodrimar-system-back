@@ -10,6 +10,7 @@ import { categoryRouter } from "./routers/category-router";
 import { insertItemRouter } from "./routers/insertItem-router";
 import { subCategoryRouter } from "./routers/sub-category-router";
 import { imageRouter } from "./routers/image-router";
+import { licensePlateRouter } from "./routers/licensePlate-router";
 
 loadEnv();
 
@@ -24,6 +25,7 @@ app
   .use("/insertItem", insertItemRouter)
   .use("/category", categoryRouter)
   .use("/subcategory", subCategoryRouter)
+  .use("/licenseplate", licensePlateRouter)
   .get("/health", (_req, res) => res.send("OK!"))
 
 export function init(): Promise<Express> {

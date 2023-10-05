@@ -33,7 +33,7 @@ async function postItem(userId: number, item:itensBody) {
     if(hasName){
         throw conflictError("O nome ja está em uso")
     }
-    const createNewItem = await itemRepository.createItem(item)
+    const createNewItem = await itemRepository.createItem(userId,item)
 }
 
 
