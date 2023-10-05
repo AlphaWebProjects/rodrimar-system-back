@@ -15,13 +15,14 @@ async function findItemWithName(name:string){
     })
 }
 
-async function createItem(item:itensBody) {
+async function createItem(userId:number,item:itensBody) {
     return prisma.item.create({
         data: {
             name: item.name,
             description: item.description,
             lastPrice: item.lastPrice,
             subCategoryId: item.subCategoryId,
+            createdBy:userId,
             imageId: item.imageId, 
           }
     })

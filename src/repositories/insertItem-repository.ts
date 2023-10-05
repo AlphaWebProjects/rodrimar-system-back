@@ -15,7 +15,7 @@ async function findByItemId(itemId:number) {
         }
     })
 }
-async function insertItem(insertedItem: insertedItemBody) {
+async function insertItem(userId:number,insertedItem: insertedItemBody) {
     const existingItem = await prisma.insertedItens.findFirst({
         where: {
             itemId: insertedItem.itemId,
@@ -31,8 +31,12 @@ async function insertItem(insertedItem: insertedItemBody) {
             item: {
                 connect: { id: insertedItem.itemId },
             },
+            user:{
+                connect:{id:userId}
+            },
             price: insertedItem.price,
             insertedQuantity: insertedItem.insertedQuantity,
+
             stock: newStock,
         },
     });
@@ -59,22 +63,10 @@ async function updateStock(upInsertItem: updateInsertedItemBody) {
 
 
 
-async function createItem(item:itensBody) {
-    return prisma.item.create({
-        data: {
-            name: item.name,
-            description: item.description,
-            lastPrice: item.lastPrice,
-            subCategoryId: item.subCategoryId,
-            imageId: item.imageId, 
-          }
-    })
-}
 
 
 const insertedItemRepository = {
     findAllInsertedItens,
-    createItem,
     insertItem,
     updateStock,
     findByItemId

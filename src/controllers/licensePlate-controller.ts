@@ -6,14 +6,16 @@ import { AuthenticatedRequest } from "@/middlewares/authentication-middlerare";
 import itemService from "@/services/item-service";
 import { UserRoles } from "@prisma/client";
 import { enableBody, enableSCHEMA } from "@/schemas/item/enableItemSCHEMA";
+import licensePlateService from "@/services/licensePlate-service";
 
 
 
-export async function getItens(req: AuthenticatedRequest, res: Response){
+export async function getLicensePlates(req: AuthenticatedRequest, res: Response){
     const userId = Number(req.query.userId);
+    console.log(userId)
     try {
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.VISIT })
-        const itens = await itemService.getAllItens(Number(userId))
+        const itens = await licensePlateService.getAllLicensePlates(Number(userId))
         return res.send(itens)
 
     } catch (error) {
@@ -31,18 +33,17 @@ export async function getItens(req: AuthenticatedRequest, res: Response){
     }
 }
 
-export async function postItens(req: AuthenticatedRequest, res: Response) {
+export async function postLicensePlates(req: AuthenticatedRequest, res: Response) {
     try {
-        const item: itensBody = req.body
+        const licensePlate = req.body
         const userId = Number(req.query.userId);
-        const {error} = itemSCHEMA.validate(item, {abortEarly: false})
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
 
-        if (error) {
+        if (!licensePlate) {
             return res.sendStatus(httpStatus.BAD_REQUEST);
           }
 
-          const itemPost = await itemService.postItem(Number(userId), item)
+           await licensePlateService.postLicensePlate(licensePlate.license)
 
           res.sendStatus(httpStatus.CREATED)
 
@@ -61,7 +62,7 @@ export async function postItens(req: AuthenticatedRequest, res: Response) {
     }
 }
 
-export async function updateEnableStatus(req: AuthenticatedRequest, res: Response) {
+export async function updateLicensePlates(req: AuthenticatedRequest, res: Response) {
     try {
         const enable:enableBody = req.body
         const userId = Number(req.query.userId);

@@ -23,7 +23,7 @@ async function inserItem(userId:number, inserItem: insertedItemBody) {
     if(inserItem.insertedQuantity < 0){
         throw httpStatus.NOT_ACCEPTABLE
     }
-    await insertedItemRepository.insertItem(inserItem)
+    await insertedItemRepository.insertItem(userId,inserItem)
     return
 }
 

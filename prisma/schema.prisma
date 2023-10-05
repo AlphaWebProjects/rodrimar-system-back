@@ -16,11 +16,13 @@ model session {
 
   user        user?     @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
+
 enum UserRoles {
   ADMIN
   MODERATOR
   VISIT
 }
+
 model user {
   id            Int         @id @default(autoincrement())
   name          String
@@ -32,7 +34,11 @@ model user {
 
   session                   session[]
   category                  category[]
+   items                     item[] 
   subCategory               subCategory[]
+   insertedItens              insertedItens[]
+   deletedItens               deletedItens[]
+   licensePlate               licensePlate[]
 }
 model category {
   id            Int             @id @default(autoincrement())
@@ -57,6 +63,7 @@ model subCategory {
 
   user          user?       @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category      category?   @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+     items                     item[] 
 }
 model item {
   id            Int       @id @default(autoincrement())
@@ -64,14 +71,20 @@ model item {
   description   String
   lastPrice     Float
   imageId       Int
-  subCategoryId Int   
+  subCategoryId Int
+  createdBy     Int    
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+
   image          image?      @relation(fields: [imageId], references: [id])
-  insertedItens insertedItens[]
-  enable        Boolean   @default(true)
+  user           user?       @relation(fields: [createdBy], references: [id])
+  insertedItens  insertedItens[]
+  enable         Boolean   @default(true)
+
+  subCategory    subCategory  @relation(fields: [subCategoryId], references: [id])
 }
+
+
 
 model insertedItens {
   id               Int       @id @default(autoincrement())
@@ -79,12 +92,30 @@ model insertedItens {
   price            Float
   insertedQuantity Float
   stock            Int
+  createdBy     Int    
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   enable           Boolean   @default(true)
 
   item             item?      @relation(fields: [itemId], references: [id])
+  user           user?       @relation(fields: [createdBy], references: [id])
+
+    deletedItens               deletedItens[]
 }
+
+model deletedItens {
+  id               Int       @id @default(autoincrement())
+  insertedItemId   Int
+  deletedQuantity  Float
+  userId           Int
+
+  insertedItem     insertedItens  @relation(fields: [insertedItemId], references: [id])
+  user             user           @relation(fields: [userId], references: [id])
+
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
 
 model image {
   id                  Int         @id @default(autoincrement())
@@ -94,4 +125,14 @@ model image {
   updatedAt           DateTime    @updatedAt
 
   item                item[]
+}
+
+model licensePlate {
+  id         Int       @id @default(autoincrement())
+  license    String    @unique
+  createdBy Int
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  user           user?       @relation(fields: [createdBy], references: [id])
 }
