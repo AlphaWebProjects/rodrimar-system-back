@@ -34,11 +34,11 @@ model user {
 
   session                   session[]
   category                  category[]
-   items                     item[] 
+  items                     item[] 
   subCategory               subCategory[]
-   insertedItens              insertedItens[]
-   deletedItens               deletedItens[]
-   licensePlate               licensePlate[]
+  insertedItens             insertedItens[]
+  deletedItens              deletedItens[]
+  licensePlate              licensePlate[]
 }
 model category {
   id            Int             @id @default(autoincrement())
@@ -63,7 +63,7 @@ model subCategory {
 
   user          user?       @relation(fields: [createdBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
   category      category?   @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-     items                     item[] 
+  items         item[] 
 }
 model item {
   id            Int       @id @default(autoincrement())
@@ -75,13 +75,12 @@ model item {
   createdBy     Int    
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  enable        Boolean   @default(true)
 
-  image          image?      @relation(fields: [imageId], references: [id])
-  user           user?       @relation(fields: [createdBy], references: [id])
+  image          image?           @relation(fields: [imageId], references: [id])
+  user           user?            @relation(fields: [createdBy], references: [id])
+  subCategory    subCategory      @relation(fields: [subCategoryId], references: [id])
   insertedItens  insertedItens[]
-  enable         Boolean   @default(true)
-
-  subCategory    subCategory  @relation(fields: [subCategoryId], references: [id])
 }
 
 
@@ -92,15 +91,15 @@ model insertedItens {
   price            Float
   insertedQuantity Float
   stock            Int
-  createdBy     Int    
+  createdBy        Int    
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   enable           Boolean   @default(true)
 
-  item             item?      @relation(fields: [itemId], references: [id])
-  user           user?       @relation(fields: [createdBy], references: [id])
+  item             item?        @relation(fields: [itemId], references: [id])
+  user             user?        @relation(fields: [createdBy], references: [id])
 
-    deletedItens               deletedItens[]
+  deletedItens               deletedItens[]
 }
 
 model deletedItens {
@@ -108,12 +107,11 @@ model deletedItens {
   insertedItemId   Int
   deletedQuantity  Float
   userId           Int
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   insertedItem     insertedItens  @relation(fields: [insertedItemId], references: [id])
   user             user           @relation(fields: [userId], references: [id])
-
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
 }
 
 
@@ -128,11 +126,12 @@ model image {
 }
 
 model licensePlate {
-  id         Int       @id @default(autoincrement())
-  license    String    @unique
-  createdBy Int
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id              Int       @id @default(autoincrement())
+  license         String    @unique
+  createdBy       Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   user           user?       @relation(fields: [createdBy], references: [id])
 }
+
