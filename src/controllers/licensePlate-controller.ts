@@ -8,14 +8,12 @@ import { UserRoles } from "@prisma/client";
 import { enableBody, enableSCHEMA } from "@/schemas/item/enableItemSCHEMA";
 import licensePlateService from "@/services/licensePlate-service";
 
-
-
 export async function getLicensePlates(req: AuthenticatedRequest, res: Response){
-    const userId = Number(req.query.userId);
-    console.log(userId)
+    const { userId } = req
+
     try {
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.VISIT })
-        const itens = await licensePlateService.getAllLicensePlates(Number(userId))
+        const itens = await licensePlateService.getAllLicensePlates()
         return res.send(itens)
 
     } catch (error) {
@@ -35,7 +33,7 @@ export async function getLicensePlates(req: AuthenticatedRequest, res: Response)
 
 export async function postLicensePlates(req: AuthenticatedRequest, res: Response) {
     try {
-        const licensePlate = req.body
+        const { licensePlate } = req.body
         const userId = Number(req.query.userId);
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
 

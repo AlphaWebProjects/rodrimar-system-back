@@ -10,6 +10,7 @@ import { signInBody } from "@/schemas/auth/signInSCHEMA";
 import authRepository from "@/repositories/auth-repository";
 import itemRepository from "@/repositories/item-repository";
 import { enableBody } from '@/schemas/item/enableItemSCHEMA';
+import { insertedItens } from '@prisma/client';
 
 async function verifyUser(body: signUpBody){
     if (body.password !== body.passwordVerify){
@@ -22,12 +23,69 @@ async function verifyUser(body: signUpBody){
     }   
     return
 }
+function getAveragePrice(insertedItens: insertedItens[]){
+    let totalQuantity = 0;
+    let totalValue = 0;
+    for (const insertion of insertedItens) {
+        totalValue += ( insertion.price * insertion.remainingQuantity )
+        totalQuantity += insertion.remainingQuantity
+    }
+    const result = totalQuantity === 0 || totalValue === 0 ? 0 : (totalValue / totalQuantity)
 
-async function getAllItens(userId: number){
-    const allItens = await itemRepository.findAllItens()    
-    return allItens
+    return result
 }
+function getTotalValue(insertedItens: insertedItens[]){
+    let totalQuantity = 0;
+    let totalValue = 0;
+    for (const insertion of insertedItens) {
+        totalValue += ( insertion.price * insertion.remainingQuantity )
+        totalQuantity += insertion.remainingQuantity
+    }
 
+    return {totalQuantity, totalValue}
+}
+async function getAllItens(){
+    const allItens = await itemRepository.findAllItens()  
+
+    const { insertedItens } = allItens[0]
+    insertedItens[0].price
+    insertedItens[0].remainingQuantity
+
+    const formatedItens = allItens.map(e => {
+
+        const { totalQuantity, totalValue } = getTotalValue(e.insertedItens)
+
+        return {
+            itemId: e.id,
+            name: e.name,
+            stock: e.stock,
+            updatedAt: e.updatedAt,
+            createdAt: e.createdAt,
+            description: e.description,
+            enable: e.enable,
+            lastPrice: e.lastPrice,
+            averagePrice: (totalValue / totalQuantity),
+            createdBy: {
+                userName: e.user.name,
+                userRole: e.user.role,
+                userEmail: e.user.email
+            },
+            imageUrl: e.image.imageUrl,
+            insertedStock: e.insertedItens.map(e => {
+                return {
+                    insertedItemPrice: e.price,
+                    enable: e.enable,
+                    insertedQuantity: e.insertedQuantity,
+                    insertedItemRemainingQuantity: e.remainingQuantity,
+                    createdAt: e.createdAt,
+                    updatedAt: e.updatedAt,
+                }
+            }),
+            subCategoryId: e.subCategoryId,
+        } 
+    }) 
+    return formatedItens
+}
 async function postItem(userId: number, item:itensBody) {
     const hasName = await itemRepository.findItemWithName(item.name)
     if(hasName){
@@ -35,13 +93,9 @@ async function postItem(userId: number, item:itensBody) {
     }
     const createNewItem = await itemRepository.createItem(userId,item)
 }
-
-
-
 async function updateItemStatus(enable:enableBody) {
     return await itemRepository.updateStatus(enable)
 }
-
 
 const itemService = {
     getAllItens,

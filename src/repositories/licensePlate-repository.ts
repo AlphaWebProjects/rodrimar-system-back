@@ -16,7 +16,7 @@ async function createLicensePlate(license:string) {
     return prisma.licensePlate.create({
         data: {
             license
-          }
+        }
     })
 }
 

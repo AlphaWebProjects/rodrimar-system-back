@@ -4,9 +4,21 @@ import { enableBody } from "@/schemas/item/enableItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllItens(){
-    return prisma.item.findMany()
+    return prisma.item.findMany({
+        include: {
+            insertedItens: true,
+            user: true,
+            image: true
+        }
+    })
 }
-
+async function findItemById( itemId: number ){
+    return prisma.item.findUnique({
+        where: {
+            id: itemId
+        }
+    })
+}
 async function findItemWithName(name:string){
     return prisma.item.findFirst({
         where: {
@@ -14,7 +26,6 @@ async function findItemWithName(name:string){
         }
     })
 }
-
 async function createItem(userId:number,item:itensBody) {
     return prisma.item.create({
         data: {
@@ -24,12 +35,9 @@ async function createItem(userId:number,item:itensBody) {
             subCategoryId: item.subCategoryId,
             createdBy:userId,
             imageId: item.imageId, 
-          }
+        }
     })
 }
-
-
-
 async function updateStatus(Itemenable) {
     const { itemId, enable } = Itemenable;
 
@@ -53,14 +61,24 @@ async function updateStatus(Itemenable) {
 
     return updatedItem;
 }
-
-
+async function updateStock( {itemId, newStock}: {itemId: number, newStock: number} ){
+    return prisma.item.update({
+        where: {
+            id: itemId
+        },
+        data: {
+            stock: newStock
+        }
+    })
+}
 
 const itemRepository = {
     findAllItens,
     createItem,
     findItemWithName,
-    updateStatus
+    updateStatus,
+    findItemById,
+    updateStock
 }
 
 export default itemRepository

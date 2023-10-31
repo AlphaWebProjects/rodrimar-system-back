@@ -10,10 +10,12 @@ import { enableBody, enableSCHEMA } from "@/schemas/item/enableItemSCHEMA";
 
 
 export async function getItens(req: AuthenticatedRequest, res: Response){
-    const userId = Number(req.query.userId);
+
+    const { userId } = req
+    
     try {
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.VISIT })
-        const itens = await itemService.getAllItens(Number(userId))
+        const itens = await itemService.getAllItens()
         return res.send(itens)
 
     } catch (error) {

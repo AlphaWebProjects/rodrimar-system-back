@@ -4,27 +4,22 @@ import itemRepository from "@/repositories/item-repository";
 import { enableBody } from '@/schemas/item/enableItemSCHEMA';
 import licensePlateRepository from '@/repositories/licensePlate-repository';
 
-
-
-async function getAllLicensePlates(userId: number){
+async function getAllLicensePlates(){
     const allLicenses = await licensePlateRepository.findAllLicensePlates()
     return allLicenses
 }
 
-async function postLicensePlate(license:string) {
-    const hasLicense = await licensePlateRepository.findByLicense(license)
+async function postLicensePlate(licenseName:string) {
+    const hasLicense = await licensePlateRepository.findByLicense(licenseName)
     if(hasLicense){
         throw conflictError("O nome ja está em uso")
     }
-   return await licensePlateRepository.createLicensePlate(license)
+   return await licensePlateRepository.createLicensePlate(licenseName)
 }
-
-
 
 async function updateLicensePlate(enable:enableBody) {
     return await licensePlateRepository.updateLicensePlate(enable)
 }
-
 
 const licensePlateService = {
     getAllLicensePlates,
