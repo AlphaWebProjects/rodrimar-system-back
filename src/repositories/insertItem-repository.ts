@@ -12,8 +12,16 @@ async function findAllInsertedItens(){
         }
     })
 }
-
-async function findByItemId(itemId:number) {
+async function findAvailableByItensId(itemId:number) {
+    return prisma.insertedItens.findMany({
+        where: {
+            itemId: itemId,
+            enable: true
+        },
+        orderBy: { createdAt: 'asc' }
+    })
+}
+async function findByItensId(itemId:number) {
     return prisma.insertedItens.findMany({
         where: {
             itemId:itemId
@@ -30,39 +38,45 @@ async function insertItem({userId, insertedItem}: { userId: number, insertedItem
                 connect:{id:userId}
             },
             price: insertedItem.price,
-            insertedQuantity: insertedItem.insertedQuantity
+            insertedQuantity: insertedItem.insertedQuantity,
+            remainingQuantity: insertedItem.insertedQuantity,
         },
     });
 }
+// async function updateStock(upInsertItem: updateInsertedItemBody) {
+//     const { id, ...upInsertItemData } = upInsertItem;
 
-async function updateStock(upInsertItem: updateInsertedItemBody) {
-    const { id, ...upInsertItemData } = upInsertItem;
+//     // Adicione o campo updatedAt com a data e hora atual
+//     const dataToUpdate = {
+//         ...upInsertItemData,
+//         updatedAt: new Date(),
+//     };
 
-    // Adicione o campo updatedAt com a data e hora atual
-    const dataToUpdate = {
-        ...upInsertItemData,
-        updatedAt: new Date(),
-    };
-
+//     return prisma.insertedItens.update({
+//         where: {
+//             id: Number(id),
+//         },
+//         data: dataToUpdate,
+//     });
+// }
+async function updateInsertStock({ insertId, remainingQuantity}: { insertId: number, remainingQuantity: number }){
     return prisma.insertedItens.update({
         where: {
-            id: Number(id),
+            id: insertId
         },
-        data: dataToUpdate,
-    });
+        data: {
+            enable: remainingQuantity === 0 ? false : true,
+            remainingQuantity: remainingQuantity
+        }
+    })
 }
-
-
-
-
-
-
 
 const insertedItemRepository = {
     findAllInsertedItens,
     insertItem,
-    updateStock,
-    findByItemId
+    updateInsertStock,
+    findByItensId,
+    findAvailableByItensId
 }
 
 export default insertedItemRepository

@@ -39,21 +39,21 @@ async function insertItem( userId: number, insertItem: insertedItemBody ) {
     return
 }
 
-async function updateStockService(upInsertItem:updateInsertedItemBody) {
-    await insertedItemRepository.updateStock(upInsertItem)
+// async function updateStockService(upInsertItem:updateInsertedItemBody) {
+//     await insertedItemRepository.updateStock(upInsertItem)
 
-    return
-}
+//     return
+// }
 
 async function getInsertedItensByItemId(itemId:number) {
-    return insertedItemRepository.findByItemId(itemId)
+    return insertedItemRepository.findByItensId(itemId)
 }
 
 const insertedItemService = {
     getAllInsertedItens,
     insertItem,
     getInsertedItensByItemId,
-    updateStockService
+    // updateStockService
 }
 
 export default insertedItemService

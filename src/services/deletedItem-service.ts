@@ -1,11 +1,7 @@
-import insertedItemRepository from '@/repositories/insertItem-repository';
-import { insertedItemBody } from '@/schemas/insertedItem/InsItemSCHEMA';
-import httpStatus from 'http-status';
-import { updateInsertedItemBody } from '@/schemas/insertedItem/updateInsItemSCHEMA';
 import { notFoundError } from '@/errors/not-found-error';
 import itemRepository from '@/repositories/item-repository';
 import deletedItemRepository from '@/repositories/deletedItem-repository';
-import { deletedItemBody } from '@/schemas/deletedItem/deletedItemBody';
+import insertedItemRepository from '@/repositories/insertItem-repository';
 
 async function getAllDeletedItens(){
     const allItens = await deletedItemRepository.findAllDeletedItens()
@@ -14,7 +10,7 @@ async function getAllDeletedItens(){
         return {
             deletedId: e.id,
             deletedQuantity: e.deletedQuantity,
-            createdBy: e.user,
+            deletedBy: e.user,
             deletedItem: e.insertedItem,
             updatedAt: e.updatedAt,
             createdAt: e.createdAt
@@ -23,64 +19,45 @@ async function getAllDeletedItens(){
 
     return formatedItens
 }
-
-async function deleteItem({ userId: number, deletedItemBody: deletedItemBody }) {
-
-    if(insertItem.insertedQuantity <= 0){
-        throw httpStatus.NOT_ACCEPTABLE
-    }
-
-    const item = await itemRepository.findItemById( insertItem.itemId )
+async function verifyItemExist(itemId: number) {
+    const item = await itemRepository.findItemById(itemId)
 
     if (!item) {
         throw notFoundError("O id do item não esta cadastrado")
     }
 
-    await insertedItemRepository.insertItem({ insertedItem: insertItem, userId })
-
-    const newStock = item.stock + insertItem.insertedQuantity
-
-    await itemRepository.updateStock({ newStock, itemId: insertItem.itemId })
-
-    return
+    return item
 }
+async function createDeleteItem({ userId, itemId, deletedQuantity, newStock}: { userId: number, itemId: number, deletedQuantity: number, newStock: number}) {
 
-async function insertItem( userId: number, insertItem: insertedItemBody ) {
+    const insertedItens = await insertedItemRepository.findAvailableByItensId(itemId)
 
-    if(insertItem.insertedQuantity <= 0){
-        throw httpStatus.NOT_ACCEPTABLE
+    let remainingToDelete = deletedQuantity
+
+    for (const insertion of insertedItens) {
+
+        if (remainingToDelete <= 0) {
+            break;
+        }
+        
+        let deletedAmountFromThisInsertion = remainingToDelete >= insertion.insertedQuantity ? insertion.insertedQuantity : remainingToDelete
+
+        await insertedItemRepository.updateInsertStock({insertId: insertion.id, remainingQuantity: insertion.remainingQuantity - deletedAmountFromThisInsertion })
+       
+        await deletedItemRepository.createDeleteItem({insertId: insertion.id, deletedQuantity: deletedAmountFromThisInsertion, deletedBy: userId})
+
+        remainingToDelete -= deletedAmountFromThisInsertion
     }
 
-    const item = await itemRepository.findItemById( insertItem.itemId )
-
-    if (!item) {
-        throw notFoundError("O id do item não esta cadastrado")
-    }
-
-    await insertedItemRepository.insertItem({ insertedItem: insertItem, userId })
-
-    const newStock = item.stock + insertItem.insertedQuantity
-
-    await itemRepository.updateStock({ newStock, itemId: insertItem.itemId })
+    await itemRepository.updateStock({ newStock, itemId: itemId })
 
     return
 }
-
-async function updateStockService(upInsertItem:updateInsertedItemBody) {
-    await insertedItemRepository.updateStock(upInsertItem)
-
-    return
-}
-
-async function getInsertedItensByItemId(itemId:number) {
-    return insertedItemRepository.findByItemId(itemId)
-}
-
+  
 const deletedItemService = {
     getAllDeletedItens,
-    insertItem,
-    getInsertedItensByItemId,
-    updateStockService
+    createDeleteItem,
+    verifyItemExist,
 }
 
 export default deletedItemService

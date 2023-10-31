@@ -9,8 +9,8 @@ export type insertedItemBody = {
 const insertedItemSCHEMA = joi.object<insertedItemBody>({
 
     itemId: joi.number().required(),
-    price:   joi.number().required(),
-    insertedQuantity:  joi.number().required(),
+    price: joi.number().required(),
+    insertedQuantity:  joi.number().positive().integer().required(),
 
 })
 

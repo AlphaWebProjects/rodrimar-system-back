@@ -11,6 +11,7 @@ import { insertItemRouter } from "./routers/insertItem-router";
 import { subCategoryRouter } from "./routers/sub-category-router";
 import { imageRouter } from "./routers/image-router";
 import { licensePlateRouter } from "./routers/licensePlate-router";
+import { deletedItemRouter } from "./routers/deletedItem-router";
 
 loadEnv();
 
@@ -23,7 +24,7 @@ app
   .use("/image", imageRouter)
   .use("/itens", itemRouter)
   .use("/insertItem", insertItemRouter)
-  .use("/deletedItem", insertItemRouter)
+  .use("/deletedItem", deletedItemRouter)
   .use("/category", categoryRouter)
   .use("/subcategory", subCategoryRouter)
   .use("/licenseplate", licensePlateRouter)

@@ -101,7 +101,7 @@ export async function getByItemId(req: AuthenticatedRequest, res: Response) {
     const {itemId }= req.body
     try {
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
-        const itens = await insertedItemRepository.findByItemId(Number(itemId))
+        const itens = await insertedItemRepository.findByItensId(Number(itemId))
         return res.send(itens)
 
     } catch (error) {

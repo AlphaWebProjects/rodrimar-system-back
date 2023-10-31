@@ -23,7 +23,7 @@ async function verifyUser(body: signUpBody){
     return
 }
 
-async function getAllItens(userId: number){
+async function getAllItens(){
     const allItens = await itemRepository.findAllItens()    
     return allItens
 }

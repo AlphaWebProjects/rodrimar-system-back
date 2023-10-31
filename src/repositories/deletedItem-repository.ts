@@ -1,8 +1,4 @@
 import { prisma } from "@/config";
-import { signUpBody } from "@/schemas/auth/signupSCHEMA";
-import { insertedItemBody } from "@/schemas/insertedItem/InsItemSCHEMA";
-import { updateInsertedItemBody } from "@/schemas/insertedItem/updateInsItemSCHEMA";
-import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllDeletedItens(){
     return prisma.deletedItens.findMany({
@@ -16,57 +12,29 @@ async function findAllDeletedItens(){
         }
     })
 }
-
-async function findByItemId(itemId:number) {
-    return prisma.insertedItens.findMany({
-        where: {
-            itemId:itemId
+async function createDeletedItem({ userId, insertId, deletedQuantity}: { userId: number, insertId: number, deletedQuantity: number }) {
+    return prisma.deletedItens.create({
+        data: {
+            insertId: insertId,
+            deletedQuantity: deletedQuantity,
+            deletedBy: userId
         }
     })
 }
-async function insertItem({userId, insertedItem}: { userId: number, insertedItem: insertedItemBody } ) {
-    return prisma.insertedItens.create({
+async function createDeleteItem({ insertId, deletedQuantity, deletedBy}: { insertId: number, deletedQuantity: number, deletedBy: number }){
+    return prisma.deletedItens.create({
         data: {
-            item: {
-                connect: { id: insertedItem.itemId },
-            },
-            user:{
-                connect:{id:userId}
-            },
-            price: insertedItem.price,
-            insertedQuantity: insertedItem.insertedQuantity
-        },
-    });
+            insertId: insertId,
+            deletedQuantity: deletedQuantity,
+            deletedBy: deletedBy
+        }
+    })
 }
-
-async function updateStock(upInsertItem: updateInsertedItemBody) {
-    const { id, ...upInsertItemData } = upInsertItem;
-
-    // Adicione o campo updatedAt com a data e hora atual
-    const dataToUpdate = {
-        ...upInsertItemData,
-        updatedAt: new Date(),
-    };
-
-    return prisma.insertedItens.update({
-        where: {
-            id: Number(id),
-        },
-        data: dataToUpdate,
-    });
-}
-
-
-
-
-
-
 
 const deletedItemRepository = {
     findAllDeletedItens,
-    insertItem,
-    updateStock,
-    findByItemId
+    createDeletedItem,
+    createDeleteItem
 }
 
 export default deletedItemRepository

@@ -15,7 +15,7 @@ export async function getItens(req: AuthenticatedRequest, res: Response){
     
     try {
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.VISIT })
-        const itens = await itemService.getAllItens(Number(userId))
+        const itens = await itemService.getAllItens()
         return res.send(itens)
 
     } catch (error) {
