@@ -4,7 +4,13 @@ import { enableBody } from "@/schemas/item/enableItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
 async function findAllItens(){
-    return prisma.item.findMany()
+    return prisma.item.findMany({
+        include: {
+            insertedItens: true,
+            user: true,
+            image: true
+        }
+    })
 }
 async function findItemById( itemId: number ){
     return prisma.item.findUnique({
