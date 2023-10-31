@@ -54,7 +54,7 @@ async function getAllItens(){
     const formatedItens = allItens.map(e => {
 
         const { totalQuantity, totalValue } = getTotalValue(e.insertedItens)
-        
+
         return {
             itemId: e.id,
             name: e.name,
@@ -86,7 +86,6 @@ async function getAllItens(){
     }) 
     return formatedItens
 }
-
 async function postItem(userId: number, item:itensBody) {
     const hasName = await itemRepository.findItemWithName(item.name)
     if(hasName){
@@ -94,13 +93,9 @@ async function postItem(userId: number, item:itensBody) {
     }
     const createNewItem = await itemRepository.createItem(userId,item)
 }
-
-
-
 async function updateItemStatus(enable:enableBody) {
     return await itemRepository.updateStatus(enable)
 }
-
 
 const itemService = {
     getAllItens,

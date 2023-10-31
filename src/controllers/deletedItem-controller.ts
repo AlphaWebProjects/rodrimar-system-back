@@ -56,6 +56,7 @@ export async function createDeletedItem(req: AuthenticatedRequest, res: Response
         const deleteBody = {
             userId,
             itemId: body.itemId,
+            licenseId: body.licenseId,
             deletedQuantity: body.deletedQuantity,
             newStock: stock - body.deletedQuantity
         }

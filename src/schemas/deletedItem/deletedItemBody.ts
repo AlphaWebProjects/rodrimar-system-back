@@ -3,6 +3,7 @@ import joi from "joi"
 export type deletedItemBody = {
     itemId: number,
     deletedQuantity:number,
+    licenseId: number
 }
 
 const deletedItemSCHEMA = joi.object<deletedItemBody>({

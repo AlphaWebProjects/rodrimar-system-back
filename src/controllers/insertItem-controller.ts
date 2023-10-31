@@ -66,36 +66,36 @@ export async function postInsertedItem(req: AuthenticatedRequest, res: Response)
     }
 }
 
-export async function putInsertedItem(req: AuthenticatedRequest, res: Response) {
-    try {
-        const upInsertItem: updateInsertedItemBody= req.body
-        const userId = Number(req.query.userId);
-        console.log(userId)
-        const {error} = updateInsItemSCHEMA.validate(upInsertItem, {abortEarly: false})
-        await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
-        await insertedItemService.updateStockService(upInsertItem)
+// export async function putInsertedItem(req: AuthenticatedRequest, res: Response) {
+//     try {
+//         const upInsertItem: updateInsertedItemBody= req.body
+//         const userId = Number(req.query.userId);
+//         console.log(userId)
+//         const {error} = updateInsItemSCHEMA.validate(upInsertItem, {abortEarly: false})
+//         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
+//         await insertedItemService.updateStockService(upInsertItem)
 
-        if (error) {
-            return res.sendStatus(httpStatus.BAD_REQUEST);
-          }
+//         if (error) {
+//             return res.sendStatus(httpStatus.BAD_REQUEST);
+//           }
 
 
-          res.sendStatus(httpStatus.OK)
+//           res.sendStatus(httpStatus.OK)
 
-    } catch (error) {
-        console.log(error)
-        if(error.name === "ConflictError") {
-            return res.sendStatus(httpStatus.CONFLICT);
-        }
-        if (error.name === "BadRequestError") {
-            return res.status(httpStatus.BAD_REQUEST).send(error);
-        }
-        if (error.name === "ForbiddenError") {
-            return res.status(httpStatus.FORBIDDEN).send(error);
-        }
-        return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
-    }
-}
+//     } catch (error) {
+//         console.log(error)
+//         if(error.name === "ConflictError") {
+//             return res.sendStatus(httpStatus.CONFLICT);
+//         }
+//         if (error.name === "BadRequestError") {
+//             return res.status(httpStatus.BAD_REQUEST).send(error);
+//         }
+//         if (error.name === "ForbiddenError") {
+//             return res.status(httpStatus.FORBIDDEN).send(error);
+//         }
+//         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
+//     }
+// }
 export async function getByItemId(req: AuthenticatedRequest, res: Response) {
     const userId = Number(req.query.userId);
     const {itemId }= req.body

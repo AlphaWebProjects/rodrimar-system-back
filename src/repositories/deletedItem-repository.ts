@@ -8,24 +8,17 @@ async function findAllDeletedItens(){
                     item: true,
                 }
             },
+            licensePlate: true,
             user: true,
         }
     })
 }
-async function createDeletedItem({ userId, insertId, deletedQuantity}: { userId: number, insertId: number, deletedQuantity: number }) {
+async function createDeleteItem({ insertId, deletedQuantity, deletedBy, licenseId}: { insertId: number, deletedQuantity: number, deletedBy: number, licenseId: number }){
     return prisma.deletedItens.create({
         data: {
             insertId: insertId,
             deletedQuantity: deletedQuantity,
-            deletedBy: userId
-        }
-    })
-}
-async function createDeleteItem({ insertId, deletedQuantity, deletedBy}: { insertId: number, deletedQuantity: number, deletedBy: number }){
-    return prisma.deletedItens.create({
-        data: {
-            insertId: insertId,
-            deletedQuantity: deletedQuantity,
+            licenseId: licenseId,
             deletedBy: deletedBy
         }
     })
@@ -33,7 +26,6 @@ async function createDeleteItem({ insertId, deletedQuantity, deletedBy}: { inser
 
 const deletedItemRepository = {
     findAllDeletedItens,
-    createDeletedItem,
     createDeleteItem
 }
 

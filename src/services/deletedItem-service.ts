@@ -10,10 +10,19 @@ async function getAllDeletedItens(){
         return {
             deletedId: e.id,
             deletedQuantity: e.deletedQuantity,
-            deletedBy: e.user,
+            deletedBy: {
+                userEmail: e.user.email,
+                userId: e.user.id,
+                userName: e.user.name,
+                userRole: e.user.role,
+            },
             deletedItem: e.insertedItem,
             updatedAt: e.updatedAt,
-            createdAt: e.createdAt
+            createdAt: e.createdAt,
+            licensePlate: {
+                licenseId: e.licensePlate.id,
+                licenseName: e.licensePlate.license,
+            }
         }
     })
 
@@ -28,7 +37,7 @@ async function verifyItemExist(itemId: number) {
 
     return item
 }
-async function createDeleteItem({ userId, itemId, deletedQuantity, newStock}: { userId: number, itemId: number, deletedQuantity: number, newStock: number}) {
+async function createDeleteItem({ userId, itemId, deletedQuantity, newStock, licenseId}: { userId: number, itemId: number, deletedQuantity: number, newStock: number, licenseId: number}) {
 
     const insertedItens = await insertedItemRepository.findAvailableByItensId(itemId)
 
@@ -44,7 +53,7 @@ async function createDeleteItem({ userId, itemId, deletedQuantity, newStock}: { 
 
         await insertedItemRepository.updateInsertStock({insertId: insertion.id, remainingQuantity: insertion.remainingQuantity - deletedAmountFromThisInsertion })
        
-        await deletedItemRepository.createDeleteItem({insertId: insertion.id, deletedQuantity: deletedAmountFromThisInsertion, deletedBy: userId})
+        await deletedItemRepository.createDeleteItem({insertId: insertion.id, deletedQuantity: deletedAmountFromThisInsertion, deletedBy: userId, licenseId})
 
         remainingToDelete -= deletedAmountFromThisInsertion
     }

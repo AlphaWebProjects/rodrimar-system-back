@@ -106,11 +106,13 @@ model insertedItens {
 model deletedItens {
   id               Int       @id @default(autoincrement())
   insertId         Int
+  licenseId        Int
   deletedQuantity  Float
   deletedBy        Int
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 
+  licensePlate     licensePlate   @relation(fields: [licenseId], references: [id])
   insertedItem     insertedItens  @relation(fields: [insertId], references: [id])
   user             user           @relation(fields: [deletedBy], references: [id])
 }
@@ -134,5 +136,7 @@ model licensePlate {
   updatedAt       DateTime  @updatedAt
 
   user           user?       @relation(fields: [createdBy], references: [id])
+
+  deletedItens   deletedItens[]
 }
 

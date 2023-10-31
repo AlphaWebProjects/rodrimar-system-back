@@ -1,4 +1,4 @@
-import { getByItemId, getInsertedItens, postInsertedItem, putInsertedItem } from '@/controllers/insertItem-controller'
+import { getByItemId, getInsertedItens, postInsertedItem } from '@/controllers/insertItem-controller'
 import { authenticateToken } from '@/middlewares/authentication-middlerare'
 import { Router } from 'express'
 
@@ -9,5 +9,5 @@ insertItemRouter
     .get("/",getInsertedItens)
     .get("/itemId",getByItemId)
     .post("/", postInsertedItem)
-    .put("/", putInsertedItem)
+    //.put("/", putInsertedItem)
 export { insertItemRouter }
