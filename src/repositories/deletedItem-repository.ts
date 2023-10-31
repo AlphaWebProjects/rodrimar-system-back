@@ -4,10 +4,14 @@ import { insertedItemBody } from "@/schemas/insertedItem/InsItemSCHEMA";
 import { updateInsertedItemBody } from "@/schemas/insertedItem/updateInsItemSCHEMA";
 import { itensBody } from "@/schemas/item/itensSCHEMA";
 
-async function findAllInsertedItens(){
-    return prisma.insertedItens.findMany({
+async function findAllDeletedItens(){
+    return prisma.deletedItens.findMany({
         include: {
-            item: true,
+            insertedItem: {
+                include: {
+                    item: true,
+                }
+            },
             user: true,
         }
     })
@@ -58,11 +62,11 @@ async function updateStock(upInsertItem: updateInsertedItemBody) {
 
 
 
-const insertedItemRepository = {
-    findAllInsertedItens,
+const deletedItemRepository = {
+    findAllDeletedItens,
     insertItem,
     updateStock,
     findByItemId
 }
 
-export default insertedItemRepository
+export default deletedItemRepository

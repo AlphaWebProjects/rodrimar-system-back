@@ -23,6 +23,7 @@ app
   .use("/image", imageRouter)
   .use("/itens", itemRouter)
   .use("/insertItem", insertItemRouter)
+  .use("/deletedItem", insertItemRouter)
   .use("/category", categoryRouter)
   .use("/subcategory", subCategoryRouter)
   .use("/licenseplate", licensePlateRouter)

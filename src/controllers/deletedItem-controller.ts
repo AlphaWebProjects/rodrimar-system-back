@@ -1,24 +1,24 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import httpStatus from "http-status";
-import { itemSCHEMA, itensBody } from "@/schemas/item/itensSCHEMA";
-import { signInSCHEMA } from "@/schemas/auth/signInSCHEMA";
 import authService from "@/services/auth-service";
 import { AuthenticatedRequest } from "@/middlewares/authentication-middlerare";
-import itemService from "@/services/item-service";
 import { UserRoles } from "@prisma/client";
 import insertedItemRepository from "@/repositories/insertItem-repository";
 import { insertedItemBody, insertedItemSCHEMA } from "@/schemas/insertedItem/InsItemSCHEMA";
 import insertedItemService from "@/services/insertItem-service";
 import { updateInsItemSCHEMA, updateInsertedItemBody } from "@/schemas/insertedItem/updateInsItemSCHEMA";
+import deletedItemService from "@/services/deletedItem-service";
+import { deletedItemBody } from "@/schemas/deletedItem/deletedItemBody";
+import itemRepository from "@/repositories/item-repository";
 
-export async function getInsertedItens(req: AuthenticatedRequest, res: Response) {
+export async function getDeletedItens(req: AuthenticatedRequest, res: Response) {
     try {
 
         const { userId } = req
 
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
 
-        const itens = await insertedItemService.getAllInsertedItens()
+        const itens = await deletedItemService.getAllDeletedItens()
         return res.send(itens)
 
     } catch (error) {
@@ -35,19 +35,28 @@ export async function getInsertedItens(req: AuthenticatedRequest, res: Response)
         return res.sendStatus(httpStatus.INTERNAL_SERVER_ERROR);
     }
 }
-export async function postInsertedItem(req: AuthenticatedRequest, res: Response) {
+export async function postDeletedItem(req: AuthenticatedRequest, res: Response) {
     try {
-        const insertItem: insertedItemBody = req.body
-        const { userId } = req
 
-        const { error } = insertedItemSCHEMA.validate(insertItem, {abortEarly: false})
+        const { userId, body }: {userId: number, body: deletedItemBody} = req
+
+        const { error } = insertedItemSCHEMA.validate(body, {abortEarly: false})
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.MODERATOR })
 
         if (error) {
             return res.sendStatus(httpStatus.BAD_REQUEST);
         }
 
-        const itemPost = await insertedItemService.insertItem(Number(userId), insertItem)
+        const item = await itemRepository.findItemById(body.itemId)
+
+        if (!item) {
+            res.sendStatus(httpStatus.NOT_FOUND)
+        }
+        if (item.stock < body.deletedQuantity) {
+            res.sendStatus(httpStatus.BAD_REQUEST)
+        }
+
+        await deletedItemService.deleteItem({...body, userId})
 
         res.sendStatus(httpStatus.CREATED)
 
