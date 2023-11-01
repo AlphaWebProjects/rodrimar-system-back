@@ -96,8 +96,11 @@ export async function update(req: AuthenticatedRequest, res: Response){
         const { userId } = req
 
         await authService.verifyUserRole({ userId, expectedRole: UserRoles.ADMIN })
-        await categoryService.verifyCategoryName({name: newName, mustHave: false})
-        await categoryService.verifyCategoryId(categoryId)
+        const { name } = await categoryService.verifyCategoryId(categoryId)
+        
+        if ( name !== newName) {
+            await categoryService.verifyCategoryName({name: newName, mustHave: false})
+        }
 
         await categoryService.upsertCategory({name: newName, userId, categoryId})
 
