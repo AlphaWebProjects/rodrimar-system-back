@@ -50,7 +50,7 @@ export async function createDeletedItem(req: AuthenticatedRequest, res: Response
         const { stock } = await deletedItemService.verifyItemExist(body.itemId)
 
         if (stock < body.deletedQuantity) {
-            res.sendStatus(httpStatus.BAD_REQUEST)
+            return res.sendStatus(httpStatus.BAD_REQUEST)
         }
 
         const deleteBody = {
