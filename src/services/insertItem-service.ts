@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import { updateInsertedItemBody } from '@/schemas/insertedItem/updateInsItemSCHEMA';
 import { notFoundError } from '@/errors/not-found-error';
 import itemRepository from '@/repositories/item-repository';
+import suppliersRepository from '@/repositories/suppliers-repository';
 
 async function getAllInsertedItens(){
     const allItens = await insertedItemRepository.findAllInsertedItens()
@@ -11,13 +12,15 @@ async function getAllInsertedItens(){
     const formatedItens = allItens.map(e => {
         return {
             ...e,
-            createdBy: e.user
+            createdBy: e.user,
+            supplier: {
+                supplierId: e.supplier.id,
+                supplierName: e.supplier.name,
+            }
         }
     })
-
     return formatedItens
 }
-
 async function insertItem( userId: number, insertItem: insertedItemBody ) {
 
     if(insertItem.insertedQuantity <= 0){
@@ -25,9 +28,13 @@ async function insertItem( userId: number, insertItem: insertedItemBody ) {
     }
 
     const item = await itemRepository.findItemById( insertItem.itemId )
-
     if (!item) {
         throw notFoundError("O id do item não esta cadastrado")
+    }
+
+    const supplier = await suppliersRepository.getSupplierById( insertItem.supplierId )
+    if (!supplier) {
+        throw notFoundError("Fornecedor não encontrado")
     }
 
     await insertedItemRepository.insertItem({ insertedItem: insertItem, userId })
@@ -38,13 +45,11 @@ async function insertItem( userId: number, insertItem: insertedItemBody ) {
 
     return
 }
-
 // async function updateStockService(upInsertItem:updateInsertedItemBody) {
 //     await insertedItemRepository.updateStock(upInsertItem)
 
 //     return
 // }
-
 async function getInsertedItensByItemId(itemId:number) {
     return insertedItemRepository.findByItensId(itemId)
 }

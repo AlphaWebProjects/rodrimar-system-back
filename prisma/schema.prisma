@@ -33,6 +33,7 @@ model user {
   updatedAt     DateTime    @updatedAt
 
   session                   session[]
+  supplier                  supplier[]
   category                  category[]
   items                     item[] 
   subCategory               subCategory[]
@@ -90,6 +91,7 @@ model insertedItens {
   id                      Int       @id @default(autoincrement())
   itemId                  Int       @map(name: "itemId")
   price                   Float
+  supplierId              Int
   insertedQuantity        Float
   remainingQuantity       Float
   receiptBill             String? 
@@ -101,6 +103,7 @@ model insertedItens {
 
   item             item?        @relation(fields: [itemId], references: [id])
   user             user?        @relation(fields: [createdBy], references: [id])
+  supplier         supplier?    @relation(fields: [supplierId], references: [id])
 
   deletedItens               deletedItens[]
 }
@@ -129,7 +132,6 @@ model image {
 
   item                item[]
 }
-
 model licensePlate {
   id              Int       @id @default(autoincrement())
   license         String    @unique
@@ -140,5 +142,16 @@ model licensePlate {
   user           user?       @relation(fields: [createdBy], references: [id])
 
   deletedItens   deletedItens[]
+}
+model supplier {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  createdBy       Int
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user            user?     @relation(fields: [createdBy], references: [id])
+
+  insertedItens   insertedItens[]
 }
 
