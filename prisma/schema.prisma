@@ -87,15 +87,17 @@ model item {
 
 
 model insertedItens {
-  id                Int       @id @default(autoincrement())
-  itemId            Int       @map(name: "itemId")
-  price             Float
-  insertedQuantity  Float
-  remainingQuantity Float
-  createdBy         Int    
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  enable            Boolean   @default(true)
+  id                      Int       @id @default(autoincrement())
+  itemId                  Int       @map(name: "itemId")
+  price                   Float
+  insertedQuantity        Float
+  remainingQuantity       Float
+  receiptBill             String? 
+  receiptBillEmissionDate String? 
+  createdBy               Int    
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+  enable                  Boolean   @default(true)
 
   item             item?        @relation(fields: [itemId], references: [id])
   user             user?        @relation(fields: [createdBy], references: [id])

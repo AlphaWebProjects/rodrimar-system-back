@@ -40,6 +40,8 @@ async function insertItem({userId, insertedItem}: { userId: number, insertedItem
             price: insertedItem.price,
             insertedQuantity: insertedItem.insertedQuantity,
             remainingQuantity: insertedItem.insertedQuantity,
+            receiptBill: insertedItem.receiptBill,
+            receiptBillEmissionDate: insertedItem.receiptBillEmissionDate
         },
     });
 }
