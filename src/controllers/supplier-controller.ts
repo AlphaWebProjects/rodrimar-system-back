@@ -50,7 +50,7 @@ export async function createSupplier(req: AuthenticatedRequest, res: Response) {
 
         await suppliersService.verifySupplierName(name)
 
-        await suppliersService.createSupplier({name})
+        await suppliersService.createSupplier({body: {name}, userId})
 
         res.sendStatus(httpStatus.CREATED)
 
