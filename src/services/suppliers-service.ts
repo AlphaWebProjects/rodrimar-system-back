@@ -6,6 +6,7 @@ import licensePlateRepository from '@/repositories/licensePlate-repository';
 import suppliersRepository from '@/repositories/suppliers-repository';
 import { createCategoryBody } from '@/schemas/category/createCategory';
 import { updateSupplierBody } from '@/schemas/supplier/updateSupplier';
+import { createSupplierBody } from '@/schemas/supplier/createSupplier';
 
 async function getAllSuppliers(){
     const allSuppliers = await suppliersRepository.findAllSuppliers()
@@ -37,8 +38,8 @@ async function verifySupplierId(supplierId: number){
     }
     return
 }
-async function createSupplier(body: createCategoryBody) {
-    await suppliersRepository.createSupplier(body)
+async function createSupplier({body, userId}: {body: createSupplierBody, userId: number}) {
+    await suppliersRepository.createSupplier({body, userId})
     return 
 }
 async function updateSupplier(body: updateSupplierBody) {

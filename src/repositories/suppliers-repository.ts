@@ -23,10 +23,11 @@ async function getSupplierById(supplierId: number){
         }
     })
 }
-async function createSupplier(body: createSupplierBody){
+async function createSupplier({body, userId}: {body: createSupplierBody, userId: number}){
     return prisma.supplier.create({
         data: {
-            name: body.name
+            name: body.name,
+            createdBy: userId
         }
     })
 }
