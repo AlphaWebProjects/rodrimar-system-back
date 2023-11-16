@@ -9,6 +9,7 @@ async function findAllInsertedItens(){
         include: {
             item: true,
             user: true,
+            supplier: true
         }
     })
 }
@@ -31,17 +32,14 @@ async function findByItensId(itemId:number) {
 async function insertItem({userId, insertedItem}: { userId: number, insertedItem: insertedItemBody } ) {
     return prisma.insertedItens.create({
         data: {
-            item: {
-                connect: { id: insertedItem.itemId },
-            },
-            user:{
-                connect:{id:userId}
-            },
+            itemId: insertedItem.itemId,
+            createdBy: userId,
             price: insertedItem.price,
             insertedQuantity: insertedItem.insertedQuantity,
             remainingQuantity: insertedItem.insertedQuantity,
             receiptBill: insertedItem.receiptBill,
-            receiptBillEmissionDate: insertedItem.receiptBillEmissionDate
+            receiptBillEmissionDate: insertedItem.receiptBillEmissionDate,
+            supplierId: insertedItem.supplierId,
         },
     });
 }
